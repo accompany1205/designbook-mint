@@ -4,6 +4,7 @@ import { Container, Button, Modal } from "react-bootstrap";
 import { useEffect, useState, useCallback, useContext } from "react";
 import { AuthContext, axiosInstance } from "../contexts/AuthContext";
 import axios from "axios";
+import { ipfsUtil } from "../utils/filters";
 
 export default function ImportNFT() {
 
@@ -45,12 +46,8 @@ export default function ImportNFT() {
             console.log({ str });
             const res = await axios.get(`https://ipfs.io/${str}`);
             console.log(res);
-            let imgSrc = "";
-            if (res.data.image) {
-              let ipfsImg = res.data.image.replace("ipfs://", "ipfs/");
-              imgSrc = "https://ipfs.io/" + ipfsImg;
-            }
-            newNft = { ...newNft, ...res.data, image: imgSrc, checked: false }
+            
+            newNft = { ...newNft, ...res.data, checked: false }
           }
         }
         _nfts.push({ ...newNft, id: itr });
@@ -159,7 +156,7 @@ export default function ImportNFT() {
                               data-bs-toggle="collapse"
                               data-bs-target={`#multiCollapseExample${index}`}
                             >
-                              <img src={nft[key]} alt="nft image" style={{ width: "5%", borderRadius: "10%" }} />
+                              <img src={ipfsUtil(nft[key])} alt="nft image" style={{ width: "5%", borderRadius: "10%" }} />
                             </td>
                           )
                         } else {
@@ -193,7 +190,7 @@ export default function ImportNFT() {
                             if (key === 'description') {
                               return <p key={_index} className="overflow-hidden"><span>{key}: </span><p>{nft[key]}</p></p>
                             } else if (key === "image") {
-                              return <p key={_index} className="d-flex justify-content-between align-items-center overflow-hidden"><span>{key}: </span><img src={nft[key]} alt="nft image" className="w-25" /></p>
+                              return <p key={_index} className="d-flex justify-content-between align-items-center overflow-hidden"><span>{key}: </span><img src={ipfsUtil(nft[key])} alt="nft image" className="w-25" /></p>
                             } else {
                               return <p key={_index} className="d-flex justify-content-between align-items-center overflow-hidden"><span>{key}: </span><span>{nft[key]}</span></p>
                             }

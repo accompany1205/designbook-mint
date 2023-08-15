@@ -14,4 +14,9 @@ function filterDataStrict(data, filter, value) {
   return filtered_data;
 }
 
-export { filterDataIncludes, filterDataStrict };
+function ipfsUtil(src){
+  let ipfsImg = src.replace("ipfs://", "ipfs/");
+  return "https://ipfs.io/" + ipfsImg;
+}
+
+export { filterDataIncludes, filterDataStrict, ipfsUtil };
