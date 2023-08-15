@@ -16,10 +16,12 @@ const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
 
 const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    if (window.localStorage.getItem('isLoggedIn')) {
+    if (window.localStorage.getItem('isLoggedIn') && window.localStorage.getItem('user')) {
       setIsLoggedIn(() => true);
+      setIsLoggedIn(JSON.parse(window.localStorage.getItem('user')));
     }
     if (window.localStorage.getItem('apiToken')) {
       axiosInstance.interceptors.request.use(
@@ -46,6 +48,8 @@ const AuthProvider = ({ children }) => {
       if (res && res.data && res.data.success) {
         console.log(res.data);
         setIsLoggedIn(() => true);
+        setUser(()=> res.data.user);
+        window.localStorage.setItem('user', JSON.stringify(res.data.user));
         window.localStorage.setItem('isLoggedIn', true)
         window.localStorage.setItem('token', res.data.token)
         window.localStorage.setItem('apiToken', res.data.user.apiToken)
@@ -77,11 +81,13 @@ const AuthProvider = ({ children }) => {
     window.localStorage.removeItem('isLoggedIn');
     window.localStorage.removeItem('token');
     window.localStorage.removeItem('apiToken');
+    window.localStorage.removeItem('user');
     window.location.href = '/login';
   };
 
   const authContextValue = {
     isLoggedIn,
+    user,
     login,
     logout,
   };
