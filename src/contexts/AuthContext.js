@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (window.localStorage.getItem('isLoggedIn') && window.localStorage.getItem('user')) {
       setIsLoggedIn(() => true);
-      setIsLoggedIn(JSON.parse(window.localStorage.getItem('user')));
+      setUser(JSON.parse(window.localStorage.getItem('user')));
     }
     if (window.localStorage.getItem('apiToken')) {
       axiosInstance.interceptors.request.use(

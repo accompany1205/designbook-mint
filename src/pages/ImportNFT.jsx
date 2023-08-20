@@ -8,7 +8,7 @@ import { ipfsUtil } from "../utils/filters";
 
 export default function ImportNFT() {
 
-  const { user, apiToken } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
 
   const [tokenId, setTokenId] = useState("");
@@ -42,12 +42,12 @@ export default function ImportNFT() {
           }
           if (key === "metadata") {
             let str = atob(nft[key]);
-            str = str.replace("ipfs://", "ipfs/");
+            str = str.replace("ipfs://", "");
             console.log({ str });
-            const res = await axios.get(`https://ipfs.io/${str}`);
+            const res = await axios.get(`https://ipfs.io/ipfs/${str}`);
             console.log(res);
-            
-            newNft = { ...newNft, ...res.data, checked: false }
+
+            newNft = { ...newNft, ...res.data, _ipfs: `ipfs://${str}`, checked: false }
           }
         }
         _nfts.push({ ...newNft, id: itr });
@@ -91,8 +91,10 @@ export default function ImportNFT() {
     setShow(() => false);
   };
   const handleSave = () => {
+    console.log(user);
+    console.log(selectedNfts);
     const res = axiosInstance.post('/users/api/outsite-mint', {
-      poolName, brand, sku, color, size, details: selectedNfts, tokenId: user?.apiToken || "", partnerId: user?.id || 0, price
+      poolName, brand, sku, color, size, details: selectedNfts, tokenId: selectedNfts[0].account_id, partnerId: user?.id || 0, price
     })
     console.log({ res });
     setShow(() => false);
@@ -153,6 +155,7 @@ export default function ImportNFT() {
                         if (key === "image") {
                           return (
                             <td
+                              key={_index}
                               data-bs-toggle="collapse"
                               data-bs-target={`#multiCollapseExample${index}`}
                             >
@@ -162,6 +165,7 @@ export default function ImportNFT() {
                         } else {
                           return (
                             <td
+                              key={_index}
                               className="text-center"
                               data-bs-toggle="collapse"
                               data-bs-target={`#multiCollapseExample${index}`}
@@ -188,7 +192,7 @@ export default function ImportNFT() {
                           // if(key === "image") console.log(typeof nft[key], nft);
                           if (typeof nft[key] !== 'object' && typeof nft[key] !== 'array') {
                             if (key === 'description') {
-                              return <p key={_index} className="overflow-hidden"><span>{key}: </span><p>{nft[key]}</p></p>
+                              return <div key={_index} className="overflow-hidden"><span>{key}: </span><p>{nft[key]}</p></div>
                             } else if (key === "image") {
                               return <p key={_index} className="d-flex justify-content-between align-items-center overflow-hidden"><span>{key}: </span><img src={ipfsUtil(nft[key])} alt="nft image" className="w-25" /></p>
                             } else {
