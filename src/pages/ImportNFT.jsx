@@ -29,6 +29,9 @@ export default function ImportNFT() {
   }, []);
 
   const handleClickImportBtn = async () => {
+    if(tokenId.length === 0){
+      return;
+    }
     const res = await axios.get(`${process.env.REACT_APP_HEDERA_API}/api/v1/tokens/${tokenId}/nfts`);
     if (res && res.data && res.data.nfts) {
       // setNfts(() => res.data.nfts);

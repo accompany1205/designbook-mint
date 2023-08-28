@@ -2,43 +2,43 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext';
-// import { Toast } from 'primereact/toast';
+import { Toast } from 'primereact/toast';
 import '../auth.css';
 export default function Login() {
     const { isLoggedIn, login, logout } = useContext(AuthContext);
-    // const toast = useRef(null);
+    const toast = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         console.log('login', {isLoggedIn});
         if (isLoggedIn) {
-            navigate('/')
+            navigate('/');
         }
     }, [isLoggedIn])
 
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [key, setKey] = useState('');
 
     const handleSumbit = async (event) => {
         event.preventDefault();
-        const res = await login(email, password);
+        const res = await login(email, key);
         if(!res){
-            // toast.current.show({ severity: 'error', summary: 'Sign In info incorrect!', detail: `Name: Error`, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Sign In info incorrect!', detail: `Name: Error`, life: 3000 });
         }
         setEmail('');
-        setPassword('');
+        setKey('');
     }
     const handleChange = (event) => {
         if(event.target.name === 'email'){
             setEmail(()=>event.target.value)
         }else{
-            setPassword(()=>event.target.value);
+            setKey(()=>event.target.value);
         }
     };
 
     return (
         <div className="auth-wrapper">
-            {/* <Toast ref={toast} /> */}
+            <Toast ref={toast} />
             <div className="auth-inner">
                 <form onSubmit={handleSumbit}>
                     <h3>Sign In</h3>
@@ -54,13 +54,13 @@ export default function Login() {
                         />
                     </div>
                     <div className="mb-3">
-                        <label>Password</label>
+                        <label>Company Key</label>
                         <input
-                            type="password"
-                            name="password"
+                            type="text"
+                            name="key"
                             className="form-control"
-                            placeholder="Enter password"
-                            value={password}
+                            placeholder="Enter key"
+                            value={key}
                             onChange={handleChange}
                         />
                     </div>

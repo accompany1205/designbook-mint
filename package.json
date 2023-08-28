@@ -17,6 +17,7 @@
     "joi": "^17.9.2",
     "nft.storage": "^7.0.0",
     "node-sass": "8.0",
+    "primereact": "^9.6.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",

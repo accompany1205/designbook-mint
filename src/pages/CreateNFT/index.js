@@ -684,7 +684,7 @@ export default function CreateNFT() {
 
         <Modal show={activeCustomModal} onHide={handleChangeModal}>
           <Modal.Header>
-            <Modal.Title>{isNFTCreated ? "Success" : "Submitting Product to Store"}</Modal.Title>
+            <Modal.Title>{isNFTCreated ? "Success" : "Minting the NFTs and creating redemption links"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {isNFTCreated ? (
