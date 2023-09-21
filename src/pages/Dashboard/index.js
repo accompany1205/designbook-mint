@@ -90,15 +90,15 @@ function Dashboard() {
                                     <tbody>
                                         <tr>
                                             <td className="fw-bold">Wallet balance in HBAR / USD</td>
-                                            <td>{account.wallet_balance_hbar}/{(account.wallet_balance_hbar * rate).toFixed(2)}</td>
+                                            <td>{account.wallet_balance_hbar.toFixed(2)}/{(account.wallet_balance_hbar * rate).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td className="fw-bold">Royalty Earned in HBAR / USD</td>
-                                            <td>{account.royalties_earned_hbar}/{(account.royalties_earned_hbar * rate).toFixed(2)}</td>
+                                            <td>{account.royalties_earned_hbar.toFixed(2)}/{(account.royalties_earned_hbar * rate).toFixed(2)}</td>
                                         </tr>
                                         <tr>
                                             <td className="fw-bold">Total Fees Paid in HBAR / USD</td>
-                                            <td>{account.fees_paid_hbar}/{(account.fees_paid_hbar * rate).toFixed(2)}</td>
+                                            <td>{account.fees_paid_hbar.toFixed(2)}/{(account.fees_paid_hbar * rate).toFixed(2)}</td>
                                         </tr>
 
                                     </tbody>

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -61,7 +60,7 @@ const SidebarContainer = styled.div`
 `;
 
 const Logo = styled.div`
-  color:var(--white);
+  color: var(--white);
   cursor: pointer;
   margin-bottom: 1rem;
   svg {
@@ -117,8 +116,7 @@ const Text = styled.span`
 `;
 
 const Profile = styled.div`
-  width: ${(props) => (props.clicked ? "14rem" : "3rem")};
-//   height: 3rem;
+  //   height: 3rem;
   padding: 0.5rem 1rem;
   /* border: 2px solid var(--white); */
   border-radius: 20px;
@@ -126,7 +124,7 @@ const Profile = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  left:0;
+  left: 0;
   bottom: 1rem;
   background-color: var(--black);
   padding: 10px;
@@ -201,21 +199,20 @@ const Sidebar = () => {
 
   useEffect(() => {
     const currentUrl = window.location.href;
-    const route = currentUrl.split('/')[currentUrl.split('/').length - 1];
+    const route = currentUrl.split("/")[currentUrl.split("/").length - 1];
     console.log(route);
     if (route !== "login" && !isLoggedIn) {
-      navigate("/login")
+      navigate("/login");
     }
-  }, [])
+  }, []);
 
   const hanldeItemClick = (to) => {
-
     navigate(to);
-  }
+  };
 
   const handleClickLogOut = () => {
     logout();
-  }
+  };
   return (
     <>
       {isLoggedIn && (
@@ -224,10 +221,11 @@ const Sidebar = () => {
             Click
           </Button>
           <SidebarContainer>
-
             <SlickBar clicked={click}>
               <Logo>
-                <h2 onClick={() => hanldeItemClick()}>{!click ? "D" : "Designbook"}</h2>
+                <h2 onClick={() => hanldeItemClick()}>
+                  {!click ? "D" : "Designbook"}
+                </h2>
               </Logo>
               <Item
                 onClick={() => hanldeItemClick("/")}
@@ -283,28 +281,15 @@ const Sidebar = () => {
             </SlickBar>
 
             <Profile clicked={profileClick}>
-              <img
-                onClick={() => handleProfileClick()}
-                src="https://picsum.photos/200"
-                alt="Profile"
-              />
-              <Details clicked={profileClick}>
-                <Name>
-                  <h4>Jhon&nbsp;Doe</h4>
-                  <a href="/#">view&nbsp;profile</a>
-                </Name>
-
-                <Logout onClick={() => handleClickLogOut()}>
-                  <svg viewBox="0 0 512 512" width="100" title="power-off">
-                    <path d="M400 54.1c63 45 104 118.6 104 201.9 0 136.8-110.8 247.7-247.5 248C120 504.3 8.2 393 8 256.4 7.9 173.1 48.9 99.3 111.8 54.2c11.7-8.3 28-4.8 35 7.7L162.6 90c5.9 10.5 3.1 23.8-6.6 31-41.5 30.8-68 79.6-68 134.9-.1 92.3 74.5 168.1 168 168.1 91.6 0 168.6-74.2 168-169.1-.3-51.8-24.7-101.8-68.1-134-9.7-7.2-12.4-20.5-6.5-30.9l15.8-28.1c7-12.4 23.2-16.1 34.8-7.8zM296 264V24c0-13.3-10.7-24-24-24h-32c-13.3 0-24 10.7-24 24v240c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24z" />
-                  </svg>
-                </Logout>
-              </Details>
+              <Logout onClick={() => handleClickLogOut()}>
+                <svg viewBox="0 0 512 512" width="100" title="power-off">
+                  <path d="M400 54.1c63 45 104 118.6 104 201.9 0 136.8-110.8 247.7-247.5 248C120 504.3 8.2 393 8 256.4 7.9 173.1 48.9 99.3 111.8 54.2c11.7-8.3 28-4.8 35 7.7L162.6 90c5.9 10.5 3.1 23.8-6.6 31-41.5 30.8-68 79.6-68 134.9-.1 92.3 74.5 168.1 168 168.1 91.6 0 168.6-74.2 168-169.1-.3-51.8-24.7-101.8-68.1-134-9.7-7.2-12.4-20.5-6.5-30.9l15.8-28.1c7-12.4 23.2-16.1 34.8-7.8zM296 264V24c0-13.3-10.7-24-24-24h-32c-13.3 0-24 10.7-24 24v240c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24z" />
+                </svg>
+              </Logout>
             </Profile>
           </SidebarContainer>
         </Container>
       )}
-
     </>
   );
 };
