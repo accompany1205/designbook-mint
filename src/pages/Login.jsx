@@ -82,7 +82,7 @@ export default function Login() {
                         </button>
                     </div>
                     <p className="forgot-password text-right">
-                        create a new  <a href="https://registration.designbook.app/">account?</a>
+                        create a new  <a href={process.env.REACT_APP_REGISTER_URL}>account?</a>
                     </p>
                 </form>
             </div>
