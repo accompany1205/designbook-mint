@@ -1,13 +1,21 @@
-import { useState, useCallback, useContext, useEffect, useMemo, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import uploadNft from "../../helpers/upload_nft.mjs";
 import { useNavigate } from "react-router-dom";
 import formatImageUrl from "../../helpers/format_image_url.js";
 import { useAuthenticatedFetch } from "../../hooks";
 import { Card, Container, Row, Col, Modal, Spinner } from "react-bootstrap";
-import 'react-dropzone-uploader/dist/styles.css';
-import Dropzone from 'react-dropzone-uploader';
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
 import Joi from "joi";
 import { axiosInstance } from "../../contexts/AuthContext.js";
+import { Toast } from "primereact/toast";
 
 const nftCreateObjectSchema = Joi.object().keys({
   nftImage: Joi.required().error(
@@ -83,45 +91,45 @@ const nftCreateObjectSchema = Joi.object().keys({
 
 const genders = [
   {
-    label: 'Men',
-    value: 'Men',
+    label: "Men",
+    value: "Men",
   },
   {
-    label: 'Women',
-    value: 'Women',
+    label: "Women",
+    value: "Women",
   },
   {
-    label: 'Unisex',
-    value: 'Unisex',
-  }
-]
+    label: "Unisex",
+    value: "Unisex",
+  },
+];
 
 const categories = [
   {
-    label: 'Bags',
-    value: 'Bags',
+    label: "Bags",
+    value: "Bags",
   },
   {
-    label: 'Leather goods',
-    value: 'Leather goods',
+    label: "Leather goods",
+    value: "Leather goods",
   },
   {
-    label: 'Jewellery',
-    value: 'Jewellery',
+    label: "Jewellery",
+    value: "Jewellery",
   },
   {
-    label: 'Shoes',
-    value: 'Shoes',
+    label: "Shoes",
+    value: "Shoes",
   },
   {
-    label: 'Watches',
-    value: 'Watches',
+    label: "Watches",
+    value: "Watches",
   },
   {
-    label: 'Sunglasses',
-    value: 'Sunglasses',
-  }
-]
+    label: "Sunglasses",
+    value: "Sunglasses",
+  },
+];
 
 export default function CreateNFT() {
   // const { user } = useContext(UserContext);
@@ -141,7 +149,6 @@ export default function CreateNFT() {
   const [digitalProduct, setDigitalProduct] = useState(true);
   const [gender, setGender] = useState(genders[0].value);
   const [category, setCategory] = useState(categories[0].value);
-
 
   //perklist
   const [selectedPerkList, setSelectedPerkList] = useState([]);
@@ -163,6 +170,8 @@ export default function CreateNFT() {
   const [serialNumber, setSerialNumber] = useState("Default serial no.");
   const [otherCharacteristics, setOtherCharacteristics] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
+
+  const toast = useRef(null);
 
   const [extras, setExtras] = useState([
     {
@@ -253,8 +262,6 @@ export default function CreateNFT() {
   const fileRef = useRef();
   const imgRef = useRef();
 
-
-
   const handleChangeExtra = useCallback(
     (i, key) => (e) => {
       setExtras((old) => {
@@ -266,25 +273,21 @@ export default function CreateNFT() {
     []
   );
 
-
-
   //fetch collections
-  const fetchCollections = useCallback(() => {
-    try{
-      axiosInstance.get('/users/api/v1/collections/all').then(({ data }) => {
-        if (data.success) {
-          setAllCollections(
-            data.collections.map((collection) => ({
-              value: collection.id,
-              label: collection.name,
-            }))
-          );
-        }
-      });
-    }catch (e) {
+  const fetchCollections = useCallback(async () => {
+    try {
+      const { data } = await axiosInstance.get("/users/api/v1/collections/all");
+      if (data.success) {
+        setAllCollections(
+          data.collections.map((collection) => ({
+            value: collection.id,
+            label: collection.name,
+          }))
+        );
+      }
+    } catch (e) {
       console.log(e);
     }
-    
   }, []);
 
   // Methods to store image variable when use uploads a file
@@ -295,18 +298,18 @@ export default function CreateNFT() {
     []
   );
 
-
   const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
   const validNft3DFileTypes = ["glb"];
 
   const fileUploadNftImage = !nftImage && <Dropzone />;
   const uploadedFileNftImage = nftImage && (
     <div>
-      <img src={
-        validImageTypes.includes(nftImage.type)
-          ? window.URL.createObjectURL(nftImage)
-          : ""
-      }
+      <img
+        src={
+          validImageTypes.includes(nftImage.type)
+            ? window.URL.createObjectURL(nftImage)
+            : ""
+        }
         className="img-thumbnail"
         alt={nftImage.name}
       />
@@ -335,12 +338,12 @@ export default function CreateNFT() {
   // use fetch to make requests to the ShopifyAPI
   // const fetch = useAuthenticatedFetch();
 
-
-
   const getMintPayload = useCallback(
     (_extras) => {
       console.log(_extras);
-      const __extras = _extras.filter(_item => _item.numOfEdition > 0 && _item.sku !== "" && _item.ipfs);
+      const __extras = _extras.filter(
+        (_item) => _item.numOfEdition > 0 && _item.sku !== "" && _item.ipfs
+      );
       // console.log(_extras);
       return {
         collectionName,
@@ -360,73 +363,73 @@ export default function CreateNFT() {
         perks: [
           ...(accessToCapsuleCollectionPerk
             ? [
-              {
-                perkName: 'Access To Capsule Collection',
-                value: accessToCapsuleCollectionPerk,
-              },
-            ]
+                {
+                  perkName: "Access To Capsule Collection",
+                  value: accessToCapsuleCollectionPerk,
+                },
+              ]
             : []),
           ...(accessToSpecialMediaContentPerk
             ? [
-              {
-                perkName: 'Access To Special Media Collection',
-                value: accessToSpecialMediaContentPerk,
-              },
-            ]
+                {
+                  perkName: "Access To Special Media Collection",
+                  value: accessToSpecialMediaContentPerk,
+                },
+              ]
             : []),
           ...(genericDiscountPerk
             ? [
-              {
-                perkName: 'Generic Discount',
-                value: genericDiscountPerk,
-              },
-            ]
+                {
+                  perkName: "Generic Discount",
+                  value: genericDiscountPerk,
+                },
+              ]
             : []),
           ...(productRestorationPerk
             ? [
-              {
-                perkName: 'Product Restoreation',
-                value: productRestorationPerk,
-              },
-            ]
+                {
+                  perkName: "Product Restoreation",
+                  value: productRestorationPerk,
+                },
+              ]
             : []),
           ...(productMaintenancePerk
             ? [
-              {
-                perkName: 'Product Maintenance',
-                value: productMaintenancePerk,
-              },
-            ]
+                {
+                  perkName: "Product Maintenance",
+                  value: productMaintenancePerk,
+                },
+              ]
             : []),
           ...(ticketToEventPerk
             ? [
-              {
-                perkName: 'Ticket To Event',
-                value: ticketToEventPerk,
-              },
-            ]
+                {
+                  perkName: "Ticket To Event",
+                  value: ticketToEventPerk,
+                },
+              ]
             : []),
           ...(vipExperiencePerk
             ? [
-              {
-                perkName: 'Vip Experience',
-                value: vipExperiencePerk,
-              },
-            ]
+                {
+                  perkName: "Vip Experience",
+                  value: vipExperiencePerk,
+                },
+              ]
             : []),
           ...(otherPerk
             ? [
-              {
-                perkName: 'Other',
-                value: otherPerk
-              },
-            ]
+                {
+                  perkName: "Other",
+                  value: otherPerk,
+                },
+              ]
             : []),
         ],
         editions: +numOfVariants || 0,
         royalty: +royalty || 0,
         price: extras[0].rrp,
-        extras: __extras
+        extras: __extras,
       };
     },
     [
@@ -482,7 +485,7 @@ export default function CreateNFT() {
         royalty,
         extras,
         gender,
-        category
+        category,
       });
       if (error) {
         //toast(error.message, true).dispatch(Toast.Action.SHOW);
@@ -507,30 +510,30 @@ export default function CreateNFT() {
               files: [
                 ...(nftImage
                   ? [
-                    {
-                      type: 'image',
-                      uri: nftImage,
-                      ext: nftImage.type,
-                    },
-                  ]
+                      {
+                        type: "image",
+                        uri: nftImage,
+                        ext: nftImage.type,
+                      },
+                    ]
                   : []),
                 ...(heroBannerImage
                   ? [
-                    {
-                      type: 'video',
-                      uri: heroBannerImage,
-                      ext: heroBannerImage.type,
-                    },
-                  ]
+                      {
+                        type: "video",
+                        uri: heroBannerImage,
+                        ext: heroBannerImage.type,
+                      },
+                    ]
                   : []),
                 ...(nft3DFile
                   ? [
-                    {
-                      type: '3D',
-                      uri: nft3DFile,
-                      ext: nft3DFile.type,
-                    },
-                  ]
+                      {
+                        type: "3D",
+                        uri: nft3DFile,
+                        ext: nft3DFile.type,
+                      },
+                    ]
                   : []),
               ],
               properties: {
@@ -555,21 +558,25 @@ export default function CreateNFT() {
                 ...(royalty ? { royalty: +royalty || 0 } : {}),
                 ...(selectedPerkList.length || true
                   ? {
-                    perks: JSON.stringify({
-                      ...(accessToCapsuleCollectionPerk
-                        ? { accessToCapsuleCollectionPerk }
-                        : {}),
-                      ...(accessToSpecialMediaContentPerk
-                        ? { accessToSpecialMediaContentPerk }
-                        : {}),
-                      ...(genericDiscountPerk ? { genericDiscountPerk } : {}),
-                      ...(productRestorationPerk ? { productRestorationPerk } : {}),
-                      ...(productMaintenancePerk ? { productMaintenancePerk } : {}),
-                      ...(ticketToEventPerk ? { ticketToEventPerk } : {}),
-                      ...(vipExperiencePerk ? { vipExperiencePerk } : {}),
-                      ...(otherPerk ? { otherPerk } : {}),
-                    }),
-                  }
+                      perks: JSON.stringify({
+                        ...(accessToCapsuleCollectionPerk
+                          ? { accessToCapsuleCollectionPerk }
+                          : {}),
+                        ...(accessToSpecialMediaContentPerk
+                          ? { accessToSpecialMediaContentPerk }
+                          : {}),
+                        ...(genericDiscountPerk ? { genericDiscountPerk } : {}),
+                        ...(productRestorationPerk
+                          ? { productRestorationPerk }
+                          : {}),
+                        ...(productMaintenancePerk
+                          ? { productMaintenancePerk }
+                          : {}),
+                        ...(ticketToEventPerk ? { ticketToEventPerk } : {}),
+                        ...(vipExperiencePerk ? { vipExperiencePerk } : {}),
+                        ...(otherPerk ? { otherPerk } : {}),
+                      }),
+                    }
                   : {}),
               },
             }),
@@ -582,8 +589,8 @@ export default function CreateNFT() {
           console.log(`Sending ${ipfs["url"]} to backend API...`);
           _extras.push({
             ...extras[i],
-            ipfs: ipfs["url"]
-          })
+            ipfs: ipfs["url"],
+          });
         }
       }
       console.log(_extras);
@@ -666,25 +673,39 @@ export default function CreateNFT() {
       setIsNFTCreating(false);
       setActiveCustomModal(false);
       setIsNFTCreated(true);
-      //toast("NFT has been created, please collect the redemption links in manage NFT section", false).dispatch(Toast.Action.SHOW);
+      toast.current.show({
+        severity: "success",
+        summary:
+          "NFT has been created, please collect the redemption links in manage NFT section!",
+        detail: `Name: Error`,
+        life: 3000,
+      });
     } catch (err) {
       console.log("error attempting to upload nft", err);
       setIsNFTCreating(false);
       handleChangeModal();
-      //toast("NFT creation failed. Please try again", true).dispatch(Toast.Action.SHOW);
+      // toast("NFT creation failed. Please try again", true).dispatch(Toast.Action.SHOW);
+      toast.current.show({
+        severity: "error",
+        summary: "NFT creation failed. Please try again!",
+        detail: `Name: Error`,
+        life: 3000,
+      });
     }
   };
-
 
   // custom Modal component
   let CustomModal = <></>;
   if (activeCustomModal == true)
     CustomModal = (
       <div style={{ height: "500px" }}>
-
         <Modal show={activeCustomModal} onHide={handleChangeModal}>
           <Modal.Header>
-            <Modal.Title>{isNFTCreated ? "Success" : "Submitting Product to Store"}</Modal.Title>
+            <Modal.Title>
+              {isNFTCreated
+                ? "Success"
+                : "Minting the NFTs and creating redemption links"}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             {isNFTCreated ? (
@@ -693,15 +714,20 @@ export default function CreateNFT() {
                 manage NFT section
               </p>
             ) : (
-              <div className="d-flex justify-content-around align-items-center" vertical>
+              <div
+                className="d-flex justify-content-around align-items-center"
+                vertical
+              >
                 <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Adding Product and Retreiving Redemption Link...</span>
-                </Spinner>s
+                  <span className="visually-hidden">
+                    Adding Product and Retreiving Redemption Link...
+                  </span>
+                </Spinner>
+                s
               </div>
             )}
           </Modal.Body>
         </Modal>
-
       </div>
     );
 
@@ -712,14 +738,13 @@ export default function CreateNFT() {
 
   const handleClickImage = () => {
     console.log({ fileRef });
-    if (fileRef)
-      fileRef.current.click();
-  }
+    if (fileRef) fileRef.current.click();
+  };
 
   const handleFileChange = (event) => {
     console.log(event.target.files);
     let file = event.target.files[0];
-    if (!file.type.includes('image')) {
+    if (!file.type.includes("image")) {
       return;
     }
     setNftImage(() => file);
@@ -733,16 +758,26 @@ export default function CreateNFT() {
 
     // Read the file as a data URL (base64 encoding)
     reader.readAsDataURL(file);
-  }
+  };
 
   return (
     <Container className="pt-5">
+      <Toast ref={toast} />
       <Row>
         <Col lg={4} md={6} xs={12} sm={12}>
           <Card className="p-3">
-            <h3 className="fw-bold">NFT ICON* (2D IMAGE)</h3>
-            <Card onClick={() => handleClickImage()} className="w-100" style={{ minHeight: 80 }}>
-              <input type="file" ref={fileRef} className="d-none" onChange={handleFileChange} />
+            <h3 className="fw-bold">NFT Icon (2D or 3D file)*</h3>
+            <Card
+              onClick={() => handleClickImage()}
+              className="w-100"
+              style={{ minHeight: 80 }}
+            >
+              <input
+                type="file"
+                ref={fileRef}
+                className="d-none"
+                onChange={handleFileChange}
+              />
 
               <img src={nftImage} ref={imgRef} />
 
@@ -763,7 +798,6 @@ export default function CreateNFT() {
           </Card>
         </Col>
 
-
         {/* 
           <Col lg={4} md={6} xs={12} sm={12}>
             <Card>
@@ -782,16 +816,17 @@ export default function CreateNFT() {
                 </DropZone>
               </Card.Section>
             </Card>
-          </Col> */
-        }
-
+          </Col> */}
       </Row>
       <Row className="mt-5">
         <Col lg={12} md={12} xs={12} sm={12}>
           <h4>NFT DETAILS</h4>
           <div>
             <div className="mb-3 mt-3">
-              <label htmlFor="collection" className="form-label">COLLECTION NAME*</label>
+              <label htmlFor="collection" className="form-label">
+                COLLECTION NAME* - Do not include any special characters to
+                avoid any errors
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -805,37 +840,40 @@ export default function CreateNFT() {
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="nftName" className="form-label">PRODUCT NAME*</label>
+              <label htmlFor="nftName" className="form-label">
+                PRODUCT NAME*
+              </label>
               <input
                 type="text"
                 className="form-control"
                 id="nftName"
                 name="nftName"
                 value={nftName}
-                onChange={useCallback(
-                  (e) => setNftName(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setNftName(e.target.value), [])}
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="brand" className="form-label">BRAND*</label>
+              <label htmlFor="brand" className="form-label">
+                BRAND*
+              </label>
               <input
                 type="text"
                 className="form-control"
                 id="brand"
                 name="brand"
                 value={brand}
-                onChange={useCallback(
-                  (e) => setBrand(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setBrand(e.target.value), [])}
               />
             </div>
             <Row>
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="vrOrMetaverseCompliant" className="form-label">VR/METAVERSE COMPLIANT*</label>
+                  <label
+                    htmlFor="vrOrMetaverseCompliant"
+                    className="form-label"
+                  >
+                    VR/METAVERSE COMPLIANT*
+                  </label>
                   <select
                     type="text"
                     className="form-control"
@@ -847,19 +885,16 @@ export default function CreateNFT() {
                       []
                     )}
                   >
-                    <option value="true">
-                      Yes
-                    </option>
-                    <option value="false">
-                      No
-                    </option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
                   </select>
                 </div>
-
               </Col>
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="digitalProduct" className="form-label">NFT TYPE*</label>
+                  <label htmlFor="digitalProduct" className="form-label">
+                    NFT TYPE*
+                  </label>
                   <select
                     type="text"
                     className="form-control"
@@ -871,12 +906,8 @@ export default function CreateNFT() {
                       []
                     )}
                   >
-                    <option value="true">
-                      Digital
-                    </option>
-                    <option value="false">
-                      Physical
-                    </option>
+                    <option value="true">Digital</option>
+                    <option value="false">Physical</option>
                   </select>
                 </div>
               </Col>
@@ -884,7 +915,9 @@ export default function CreateNFT() {
             <Row>
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="category" className="form-label">CATEGORY*</label>
+                  <label htmlFor="category" className="form-label">
+                    CATEGORY*
+                  </label>
                   <select
                     type="text"
                     className="form-control"
@@ -892,8 +925,7 @@ export default function CreateNFT() {
                     name="category"
                     value={category}
                     onChange={useCallback(
-                      (e) =>
-                        setCategory(e.target.value),
+                      (e) => setCategory(e.target.value),
                       []
                     )}
                   >
@@ -904,21 +936,19 @@ export default function CreateNFT() {
                     ))}
                   </select>
                 </div>
-
               </Col>
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="gender" className="form-label">GENDER*</label>
+                  <label htmlFor="gender" className="form-label">
+                    GENDER*
+                  </label>
                   <select
                     type="text"
                     className="form-control"
                     id="gender"
                     name="gender"
                     value={gender}
-                    onChange={useCallback(
-                      (e) => setGender(e.target.value),
-                      []
-                    )}
+                    onChange={useCallback((e) => setGender(e.target.value), [])}
                   >
                     {genders.map((gender, index) => (
                       <option key={index} value={gender.value}>
@@ -930,7 +960,9 @@ export default function CreateNFT() {
               </Col>
             </Row>
             <div className="mb-3 mt-3">
-              <label htmlFor="description" className="form-label">DESCRIPTION*</label>
+              <label htmlFor="description" className="form-label">
+                DESCRIPTION*
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -946,7 +978,12 @@ export default function CreateNFT() {
             <Row>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="accessToCapsuleCollectionPerk" className="form-label">ACCESS TO CAPSULE COLLECTION</label>
+                  <label
+                    htmlFor="accessToCapsuleCollectionPerk"
+                    className="form-label"
+                  >
+                    ACCESS TO CAPSULE COLLECTION
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -962,7 +999,12 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="accessToSpecialMediaContentPerk" className="form-label">ACCESS TO SPECIAL MEDIA CONTENT</label>
+                  <label
+                    htmlFor="accessToSpecialMediaContentPerk"
+                    className="form-label"
+                  >
+                    ACCESS TO SPECIAL MEDIA CONTENT
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -978,7 +1020,9 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="genericDiscountPerk" className="form-label">GENERIC DISCOUNT</label>
+                  <label htmlFor="genericDiscountPerk" className="form-label">
+                    GENERIC DISCOUNT
+                  </label>
                   <input
                     type="number"
                     className="form-control"
@@ -994,7 +1038,12 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="productRestorationPerk" className="form-label">PRODUCT RESTORATION</label>
+                  <label
+                    htmlFor="productRestorationPerk"
+                    className="form-label"
+                  >
+                    PRODUCT RESTORATION
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -1010,7 +1059,12 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="productMaintenancePerk" className="form-label">PRODUCT MAINTENANCE</label>
+                  <label
+                    htmlFor="productMaintenancePerk"
+                    className="form-label"
+                  >
+                    PRODUCT MAINTENANCE
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -1026,7 +1080,9 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="ticketToEventPerk" className="form-label">TICKET TO EVENT</label>
+                  <label htmlFor="ticketToEventPerk" className="form-label">
+                    TICKET TO EVENT
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -1042,7 +1098,9 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="vipExperiencePerk" className="form-label">VIP EXPERIENCE</label>
+                  <label htmlFor="vipExperiencePerk" className="form-label">
+                    VIP EXPERIENCE
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -1058,7 +1116,9 @@ export default function CreateNFT() {
               </Col>
               <Col xs={12} md={6} lg={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="otherPerk" className="form-label">OTHER</label>
+                  <label htmlFor="otherPerk" className="form-label">
+                    OTHER
+                  </label>
                   <input
                     type="text"
                     className="form-control"
@@ -1077,7 +1137,9 @@ export default function CreateNFT() {
               <Row key={i}>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
-                    <label htmlFor={`size${i}`} className="form-label">{`SIZE${i === 0 ? "*" : ""}`}</label>
+                    <label htmlFor={`size${i}`} className="form-label">
+                      SIZE* - For unique size, enter 0
+                    </label>
                     <input
                       type="text"
                       className="form-control"
@@ -1089,7 +1151,9 @@ export default function CreateNFT() {
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
-                    <label htmlFor={`rrp${i}`} className="form-label">{`RRP${i === 0 ? "*" : ""}`}($)</label>
+                    <label htmlFor={`rrp${i}`} className="form-label">
+                      {`RRP${i === 0 ? "*" : ""}`}($)
+                    </label>
                     <input
                       type="number"
                       className="form-control"
@@ -1101,7 +1165,10 @@ export default function CreateNFT() {
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
-                    <label htmlFor={`numberOfEdition${i}`} className="form-label">{`NUMBER OF EDITIONS${i === 0 ? "*" : ""}`}</label>
+                    <label
+                      htmlFor={`numberOfEdition${i}`}
+                      className="form-label"
+                    >{`NUMBER OF EDITIONS${i === 0 ? "*" : ""}`}</label>
                     <input
                       type="number"
                       className="form-control"
@@ -1113,7 +1180,9 @@ export default function CreateNFT() {
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
-                    <label htmlFor={`sku${i}`} className="form-label">{`SKU${i === 0 ? "*" : ""}`}</label>
+                    <label htmlFor={`sku${i}`} className="form-label">{`SKU${
+                      i === 0 ? "*" : ""
+                    }`}</label>
                     <input
                       type="text"
                       className="form-control"
@@ -1128,72 +1197,81 @@ export default function CreateNFT() {
 
             {!digitalProduct && (
               <>
-                <h3 className="fw-bold mt-3 mb-5">PRODUCT DETAILS FOR PHYSICAL NFT</h3>
+                <h3 className="fw-bold mt-3 mb-5">
+                  PRODUCT DETAILS FOR PHYSICAL NFT
+                </h3>
                 <Row>
                   <Col xs={12} sm={12} md={12} lg={12}>
                     <div className="mb-3 mt-3">
-                      <label htmlFor="releaseDate" className="form-label">RELEASE DATE*</label>
+                      <label htmlFor="releaseDate" className="form-label">
+                        RELEASE DATE*
+                      </label>
                       <input
                         type="date"
                         className="form-control"
                         id="releaseDate"
                         value={releaseDate}
-                        onChange={
-                          (e) => setReleaseDate(e.target.value)}
+                        onChange={(e) => setReleaseDate(e.target.value)}
                       />
                     </div>
                   </Col>
                   <Col xs={12} sm={12} md={12} lg={12}>
                     <div className="mb-3 mt-3">
-                      <label htmlFor="color" className="form-label">COLOR</label>
+                      <label htmlFor="color" className="form-label">
+                        COLOR
+                      </label>
                       <input
                         type="text"
                         className="form-control"
                         id="color"
                         value={color}
-                        onChange={
-                          (e) => setColor(e.target.value)}
+                        onChange={(e) => setColor(e.target.value)}
                       />
                     </div>
                   </Col>
                   <Col xs={12} sm={12} md={6} lg={6}>
                     <div className="mb-3 mt-3">
-                      <label htmlFor="material" className="form-label">MATERIAL</label>
+                      <label htmlFor="material" className="form-label">
+                        MATERIAL
+                      </label>
                       <input
                         type="text"
                         className="form-control"
                         id="material"
                         value={material}
-                        onChange={
-                          (e) => setMaterial(e.target.value)
-                        }
+                        onChange={(e) => setMaterial(e.target.value)}
                       />
                     </div>
                   </Col>
                   <Col xs={12} sm={12} md={6} lg={6}>
                     <div className="mb-3 mt-3">
-                      <label htmlFor="country" className="form-label">COUNTRY OF MANUFACTURE</label>
+                      <label htmlFor="country" className="form-label">
+                        COUNTRY OF MANUFACTURE
+                      </label>
                       <input
                         type="text"
                         className="form-control"
                         id="country"
                         value={country}
-                        onChange={
-                          (e) => setCountry(e.target.value)
-                        }
+                        onChange={(e) => setCountry(e.target.value)}
                       />
                     </div>
                   </Col>
                   <Col xs={12} sm={12} md={12} lg={12}>
                     <div className="mb-3 mt-3">
-                      <label htmlFor="otherCharacteristics" className="form-label">OTHER SPECIFICATIONS</label>
+                      <label
+                        htmlFor="otherCharacteristics"
+                        className="form-label"
+                      >
+                        OTHER SPECIFICATIONS
+                      </label>
                       <textarea
                         rows={5}
                         className="form-control"
                         id="otherCharacteristics"
                         value={otherCharacteristics}
-                        onChange={
-                          (e) => setOtherCharacteristics(e.target.value)
+                        onChange={(e) =>
+                          setOtherCharacteristics(e.target.value)
                         }
                       />
                     </div>
@@ -1204,19 +1282,17 @@ export default function CreateNFT() {
 
             <h3 className="fw-bold mt-3 mb-5">Royalty</h3>
             <div className="mb-3 mt-3">
-              <label htmlFor="royalty" className="form-label">ROYALTY*</label>
+              <label htmlFor="royalty" className="form-label">
+                ROYALTY*
+              </label>
               <input
                 type="number"
                 className="form-control"
                 id="royalty"
                 value={royalty}
-                onChange={useCallback(
-                  (e) => setRoyalty(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setRoyalty(e.target.value), [])}
               />
             </div>
-
 
             <div className="d-flex justify-content-end">
               <button className="btn btn-success btn-sm" onClick={handleSubmit}>

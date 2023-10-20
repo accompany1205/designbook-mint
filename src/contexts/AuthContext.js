@@ -38,12 +38,12 @@ const AuthProvider = ({ children }) => {
     }
   }, [])
 
-  const login = async (email, password) => {
+  const login = async (email, key) => {
     try {
-      console.log({ email, password });
+      console.log({ email, key });
       const res = await axiosInstance.post('/users/partner/login', {
         email,
-        password
+        key
       });
       if (res && res.data && res.data.success) {
         console.log(res.data);

@@ -1,15 +1,13 @@
-import { Page, Card } from "@shopify/polaris";
 import { Link } from "react-router-dom";
-import { Container, Button } from "react-bootstrap";
+import { Container} from "react-bootstrap";
 import { useEffect, useState } from "react";
-import ManagedNftsDataTable from "../component/ManageNftsDataTable";
-// import { getManageNftData } from "../utils/apiCalls";
-import parseTableData from "../utils/parseTableData";
-import { AxiosInstance } from "axios";
 import { axiosInstance } from "../contexts/AuthContext";
+import { Modal } from "react-bootstrap";
 
 export default function ManageNFTs() {
   const [tableData, setTableData] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [activeNft, setActiveNft] = useState(null);
 
   useEffect(() => {
     getNftData();
@@ -27,6 +25,15 @@ export default function ManageNFTs() {
     if (res && res.data && res.data.success) {
       setTableData(_tableData => _tableData.filter((row, index) => row.hedera_token_id !== hedera_token_id || row.editionNumber !== serial))
     }
+  }
+
+  const closeModal = () => {
+    setModalShow(false);
+  }
+
+  const handleNftClick = (nft) => {
+    setActiveNft(() => nft);
+    setModalShow(true);
   }
   return (
     <Container className="pt-5" style={{ maxWidth: "90%" }}>
@@ -63,7 +70,7 @@ export default function ManageNFTs() {
               <td>{row.editionNumber}</td>
               <td>{row.serialNumber}</td>
               <td>{row.status}</td>
-              <td>{}</td>
+              <td>{ }</td>
               <td>
                 <Link
                   to={row.redemptionLink ? row.redemptionLink : ""}
@@ -74,11 +81,95 @@ export default function ManageNFTs() {
               <td>{row.nft_type}</td>
               <td>{row.redemptionStatus}</td>
               <td><div className="btn btn-danger btn-sm" onClick={() => handleClickNFTDelete(row.editionNumber, row.hedera_token_id)}>Delete</div></td>
-              <td><div className="btn btn-light btn-sm" style={{ border: "0.5px solid gray" }}>Product Details</div></td>
+              <td><div className="btn btn-light btn-sm" style={{ border: "0.5px solid gray" }} onClick={(e) => handleNftClick(row)}>Product Details</div></td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <Modal show={modalShow} onHide={closeModal} size="lg">
+        <Modal.Header>
+          <Modal.Title>{activeNft ? activeNft.productName : ""}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <table>
+            <tbody>
+              <tr>
+                <td className="p-2">
+                  Collection Name
+                </td>
+                <td>
+                  {activeNft ? activeNft.collectionName : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  Product Name
+                </td>
+                <td>
+                  {activeNft ? activeNft.productName : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  Description
+                </td>
+                <td>
+                  {activeNft ? activeNft.description : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  Size
+                </td>
+                <td>
+                  {activeNft ? activeNft.size : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  Serial Number
+                </td>
+                <td>
+                  {activeNft ? activeNft.serialNumber : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  Redemption Link
+                </td>
+                <td>
+                  {activeNft ? activeNft.redemptionLink : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2"> 
+                  Redemption Status
+                </td>
+                <td>
+                  {activeNft ? activeNft.redemptionStatus : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  Hedera Token Id
+                </td>
+                <td>
+                  {activeNft ? activeNft.hedera_token_id : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-2">
+                  DateTime Created
+                </td>
+                <td>
+                  {activeNft ? activeNft.datetime_created : ""}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }

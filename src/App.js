@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 import SideBar from "./component/SideBar";
-import { Route, Routes } from 'react-router-dom';
-
+import { Route, Routes } from "react-router-dom";
 // import {
 //   AppBridgeProvider,
 //   QueryProvider,
 //   PolarisProvider,
 // } from "./component/providers";
 
-import { BrowserRouter } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import CreateNFT from './pages/CreateNFT';
-import ManageNFTs from './pages/Manage-NFTs';
-import ContactUs from './pages/Contact-us';
-import Login from './pages/Login';
-import { AuthProvider } from './contexts/AuthContext';
-import ImportNFT from './pages/ImportNFT';
+import { BrowserRouter } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import CreateNFT from "./pages/CreateNFT";
+import ManageNFTs from "./pages/Manage-NFTs";
+import ContactUs from "./pages/Contact-us";
+import Login from "./pages/Login";
+import { AuthProvider } from "./contexts/AuthContext";
+import ImportNFT from "./pages/ImportNFT";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
 
+//core
+import "primereact/resources/primereact.min.css";
 
 function App() {
   return (
