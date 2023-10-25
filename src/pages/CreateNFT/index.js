@@ -136,6 +136,7 @@ export default function CreateNFT() {
 
   // useState stores and updates values input in form and image, so that we can use it for our POST request later on.
   const [nftImage, setNftImage] = useState();
+  const [perkFile, setPerkFile] = useState();
   const [heroBannerImage, setHeroBannerImage] = useState();
   const [nft3DFile, setNft3DFile] = useState();
 
@@ -186,58 +187,11 @@ export default function CreateNFT() {
       numOfEdition: 0,
       sku: "",
     },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
-    {
-      size: "",
-      rrp: 0,
-      numOfEdition: 0,
-      sku: "",
-    },
   ]);
 
   const numOfVariants = useMemo(() => {
     let count = 0;
+    console.log({ extras });
     for (let e of extras) {
       if (e.size && e.sku && e.rrp && e.numOfEdition) {
         count = count + Number(e.numOfEdition);
@@ -260,7 +214,9 @@ export default function CreateNFT() {
   // Setting up Navigation Method
   const navigate = useNavigate();
   const fileRef = useRef();
+  const perkfileRef = useRef();
   const imgRef = useRef();
+  const perkImgRef = useRef();
 
   const handleChangeExtra = useCallback(
     (i, key) => (e) => {
@@ -740,11 +696,15 @@ export default function CreateNFT() {
     console.log({ fileRef });
     if (fileRef) fileRef.current.click();
   };
+  const handlePerkClickImage = () => {
+    console.log({ perkfileRef });
+    if (perkfileRef) perkfileRef.current.click();
+  };
 
   const handleFileChange = (event) => {
     console.log(event.target.files);
     let file = event.target.files[0];
-    if (!file.type.includes("image")) {
+    if (!file?.type.includes("image")) {
       return;
     }
     setNftImage(() => file);
@@ -759,87 +719,69 @@ export default function CreateNFT() {
     // Read the file as a data URL (base64 encoding)
     reader.readAsDataURL(file);
   };
+  const handlePerkFileChange = (event) => {
+    console.log(event.target.files);
+    let file = event.target.files[0];
+    if (!file?.type.includes("image")) {
+      return;
+    }
+    setPerkFile(() => file);
+    const reader = new FileReader();
+
+    // Setup a callback for when the file is loaded
+    reader.onload = (event) => {
+      // Set the image source to the loaded data URL
+      perkImgRef.current.src = event.target.result;
+    };
+
+    // Read the file as a data URL (base64 encoding)
+    reader.readAsDataURL(file);
+  };
 
   return (
     <Container className="pt-5">
       <Toast ref={toast} />
-      <Row>
-        <Col lg={4} md={6} xs={12} sm={12}>
-          <Card className="p-3">
-            <h3 className="fw-bold">NFT Icon (2D or 3D file)*</h3>
-            <Card
-              onClick={() => handleClickImage()}
-              className="w-100"
-              style={{ minHeight: 80 }}
-            >
-              <input
-                type="file"
-                ref={fileRef}
-                className="d-none"
-                onChange={handleFileChange}
-              />
-
-              <img src={nftImage} ref={imgRef} />
-
-              {/* <Dropzone
-                onChangeStatus={handleDropZoneDropNftImage}
-                onSubmit={handleSubmit}
-                accept="image/*"
-                inputContent={(files, extra) => (extra.reject ? 'Image files only' : 'Drag Files')}
-                styles={{
-                  dropzoneReject: { borderColor: 'red', backgroundColor: '#DAA' },
-                  inputLabel: (files, extra) => (extra.reject ? { color: 'red' } : {}),
-                }}
-              >
-                {fileUploadNftImage}
-                {uploadedFileNftImage}
-              </Dropzone> */}
-            </Card>
-          </Card>
-        </Col>
-
-        {/* 
-          <Col lg={4} md={6} xs={12} sm={12}>
-            <Card>
-              <Card.Section>
-                <Heading>3D NFT</Heading>
-              </Card.Section>
-
-              <Card.Section>
-                <DropZone
-                  allowMultiple={false}
-                  onDrop={handleDropZoneDropNft3DFile}
-                  // accept="model/obj"
-                  type="file"
-                >
-                  {Nft3DFileContent}
-                </DropZone>
-              </Card.Section>
-            </Card>
-          </Col> */}
-      </Row>
       <Row className="mt-5">
         <Col lg={12} md={12} xs={12} sm={12}>
-          <h4>NFT DETAILS</h4>
+          <h3 className="text-center fw-bolder">NFT Detail Page</h3>
           <div>
-            <div className="mb-3 mt-3">
-              <label htmlFor="collection" className="form-label">
-                COLLECTION NAME* - Do not include any special characters to
-                avoid any errors
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="collection"
-                name="collection"
-                value={collectionName}
-                onChange={useCallback(
-                  (e) => setCollectionName(e.target.value),
-                  []
-                )}
-              />
-            </div>
-            <div className="mb-3 mt-3">
+            <Row>
+              <Col sm={12} md={6}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="brand" className="form-label">
+                    BRAND NAME*
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="brand"
+                    name="brand"
+                    value={brand}
+                    onChange={useCallback((e) => setBrand(e.target.value), [])}
+                  />
+                </div>
+              </Col>
+              <Col sm={12} md={6}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="collection" className="form-label">
+                    COLLECTION NAME*
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="collection"
+                    name="collection"
+                    value={collectionName}
+                    onChange={useCallback(
+                      (e) => setCollectionName(e.target.value),
+                      []
+                    )}
+                  />
+                </div>
+              </Col>
+            </Row>
+
+            <div className="mb-3">
               <label htmlFor="nftName" className="form-label">
                 PRODUCT NAME*
               </label>
@@ -853,21 +795,148 @@ export default function CreateNFT() {
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="brand" className="form-label">
-                BRAND*
+              <label htmlFor="description" className="form-label">
+                Picture/Digital twin*
               </label>
-              <input
+              <div className="d-flex justify-content-center">
+                <Card
+                  className="w-30 "
+                  style={{ minHeight: 100, borderColor: "#95959540" }}
+                >
+                  <input
+                    type="file"
+                    ref={fileRef}
+                    className="d-none"
+                    onChange={handleFileChange}
+                  />
+
+                  <img
+                    src={nftImage}
+                    style={{ maxWidth: 300 }}
+                    ref={imgRef}
+                    onClick={() => handleClickImage()}
+                  />
+                  {!nftImage && (
+                    <div className="py-5 px-5">
+                      <div className="d-flex justify-content-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="48"
+                          height="48"
+                          viewBox="0 0 48 48"
+                          fill="none"
+                        >
+                          <path
+                            d="M32 32L24 24L16 32"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M24 24V42"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M32 32L24 24L16 32"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-center mt-4 mb-1">
+                        Select a file or drag and drop here
+                      </p>
+                      <p
+                        className="text-center mb-3"
+                        style={{ color: "#959595", opacity: 0.4 }}
+                      >
+                        JPG, PNG or 3D file size no more than 10MB
+                      </p>
+                      <div className="d-flex justify-content-center">
+                        <button
+                          className="btn btn-sm px-4"
+                          style={{
+                            border: "1px solid #0F91D2",
+                            color: "#0F91D2",
+                          }}
+                          onClick={() => handleClickImage()}
+                        >
+                          SELECT FILE
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* <Dropzone
+                onChangeStatus={handleDropZoneDropNftImage}
+                onSubmit={handleSubmit}
+                accept="image/*"
+                inputContent={(files, extra) => (extra.reject ? 'Image files only' : 'Drag Files')}
+                styles={{
+                  dropzoneReject: { borderColor: 'red', backgroundColor: '#DAA' },
+                  inputLabel: (files, extra) => (extra.reject ? { color: 'red' } : {}),
+                }}
+              >
+                {fileUploadNftImage}
+                {uploadedFileNftImage}
+              </Dropzone> */}
+                </Card>
+              </div>
+            </div>
+            <div className="mb-3 mt-3">
+              <label htmlFor="description" className="form-label">
+                DESCRIPTION*
+              </label>
+              <textarea
                 type="text"
                 className="form-control"
-                id="brand"
-                name="brand"
-                value={brand}
-                onChange={useCallback((e) => setBrand(e.target.value), [])}
+                id="description"
+                name="description"
+                rows={4}
+                value={description}
+                onChange={useCallback(
+                  (e) => setDescription(e.target.value),
+                  []
+                )}
               />
             </div>
             <Row>
               <Col sm={12} md={6}>
-                <div className="mb-3 mt-3">
+                <div className="mt-3">
+                  <label htmlFor="digitalProduct" className="form-label">
+                    NFT TYPE*
+                  </label>
+                  <select
+                    type="text"
+                    className="form-control"
+                    id="digitalProduct"
+                    name="digitalProduct"
+                    value={digitalProduct}
+                    onChange={useCallback(
+                      (e) => setDigitalProduct(e.target.value === "true"),
+                      []
+                    )}
+                  >
+                    <option value="true">Digital</option>
+                    <option value="false">Physical</option>
+                  </select>
+                </div>
+              </Col>
+              <Col sm={12} md={6}>
+                <div className="mt-3">
                   <label
                     htmlFor="vrOrMetaverseCompliant"
                     className="form-label"
@@ -890,29 +959,29 @@ export default function CreateNFT() {
                   </select>
                 </div>
               </Col>
+            </Row>
+            <Row>
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
-                  <label htmlFor="digitalProduct" className="form-label">
-                    NFT TYPE*
+                  <label htmlFor="gender" className="form-label">
+                    GENDER*
                   </label>
                   <select
                     type="text"
                     className="form-control"
-                    id="digitalProduct"
-                    name="digitalProduct"
-                    value={digitalProduct}
-                    onChange={useCallback(
-                      (e) => setDigitalProduct(e.target.value === "true"),
-                      []
-                    )}
+                    id="gender"
+                    name="gender"
+                    value={gender}
+                    onChange={useCallback((e) => setGender(e.target.value), [])}
                   >
-                    <option value="true">Digital</option>
-                    <option value="false">Physical</option>
+                    {genders.map((gender, index) => (
+                      <option key={index} value={gender.value}>
+                        {gender.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </Col>
-            </Row>
-            <Row>
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
                   <label htmlFor="category" className="form-label">
@@ -937,44 +1006,93 @@ export default function CreateNFT() {
                   </select>
                 </div>
               </Col>
-              <Col sm={12} md={6}>
-                <div className="mb-3 mt-3">
-                  <label htmlFor="gender" className="form-label">
-                    GENDER*
-                  </label>
-                  <select
-                    type="text"
-                    className="form-control"
-                    id="gender"
-                    name="gender"
-                    value={gender}
-                    onChange={useCallback((e) => setGender(e.target.value), [])}
-                  >
-                    {genders.map((gender, index) => (
-                      <option key={index} value={gender.value}>
-                        {gender.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </Col>
             </Row>
-            <div className="mb-3 mt-3">
-              <label htmlFor="description" className="form-label">
-                DESCRIPTION*
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="description"
-                name="description"
-                value={description}
-                onChange={useCallback(
-                  (e) => setDescription(e.target.value),
-                  []
-                )}
-              />
-            </div>
+            {!digitalProduct && (
+              <>
+                <Row>
+                  <Col xs={12} sm={12} md={6}>
+                    <div className="mb-3">
+                      <label htmlFor="releaseDate" className="form-label">
+                        RELEASE DATE*
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="releaseDate"
+                        value={releaseDate}
+                        onChange={(e) => setReleaseDate(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <div className="mb-3">
+                      <label htmlFor="color" className="form-label">
+                        COLOR*
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="color"
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <div className="mb-3">
+                      <label htmlFor="material" className="form-label">
+                        MATERIAL*
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="material"
+                        value={material}
+                        onChange={(e) => setMaterial(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} sm={12} md={6} lg={6}>
+                    <div className="mb-3">
+                      <label htmlFor="country" className="form-label">
+                        COUNTRY OF MANUFACTURE
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="country"
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                  <Col xs={12} sm={12} md={12} lg={12}>
+                    <div className="mb-3">
+                      <label
+                        htmlFor="otherCharacteristics"
+                        className="form-label"
+                      >
+                        OTHER SPECIFICATIONS
+                      </label>
+                      <textarea
+                        rows={5}
+                        className="form-control"
+                        id="otherCharacteristics"
+                        value={otherCharacteristics}
+                        onChange={(e) =>
+                          setOtherCharacteristics(e.target.value)
+                        }
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              </>
+            )}
+
             <Row>
               <Col xs={12} md={6} lg={4}>
                 <div className="mb-3 mt-3">
@@ -1096,7 +1214,7 @@ export default function CreateNFT() {
                   />
                 </div>
               </Col>
-              <Col xs={12} md={6} lg={6}>
+              <Col xs={12} md={4} lg={4}>
                 <div className="mb-3 mt-3">
                   <label htmlFor="vipExperiencePerk" className="form-label">
                     VIP EXPERIENCE
@@ -1114,7 +1232,10 @@ export default function CreateNFT() {
                   />
                 </div>
               </Col>
-              <Col xs={12} md={6} lg={6}>
+              <Col xs={12} md={4} lg={4}>
+                
+              </Col>
+              <Col xs={12} md={4} lg={4}>
                 <div className="mb-3 mt-3">
                   <label htmlFor="otherPerk" className="form-label">
                     OTHER
@@ -1132,13 +1253,100 @@ export default function CreateNFT() {
                   />
                 </div>
               </Col>
+              <div className="d-flex justify-content-center flex-wrap">
+                <Card className="w-30 " style={{ borderColor: "#95959540" }}>
+                  <input
+                    type="file"
+                    ref={perkfileRef}
+                    className="d-none"
+                    onChange={handlePerkFileChange}
+                  />
+                  <img
+                    src={perkFile}
+                    style={{ maxWidth: 300 }}
+                    ref={perkImgRef}
+                    onClick={() => handlePerkClickImage()}
+                  />
+                  {!perkFile && (
+                    <div className="px-5 py-2">
+                      <div className="d-flex justify-content-around align-items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="48"
+                          height="48"
+                          viewBox="0 0 48 48"
+                          fill="none"
+                        >
+                          <path
+                            d="M32 32L24 24L16 32"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M24 24V42"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M32 32L24 24L16 32"
+                            stroke="#282828"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <div>
+                          <p className="text-center mb-1">
+                            Select a file or drag and drop here
+                          </p>
+                          <p
+                            className="text-center mb-0"
+                            style={{ color: "#959595", opacity: 0.4 }}
+                          >
+                            JPG, PNG or 3D file size no more than 10MB
+                          </p>
+                        </div>
+                        <div className="d-flex justify-content-center">
+                          <button
+                            className="btn btn-sm px-4"
+                            style={{
+                              border: "1px solid #0F91D2",
+                              color: "#0F91D2",
+                            }}
+                            onClick={() => handlePerkClickImage()}
+                          >
+                            SELECT FILE
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              </div>
             </Row>
+            <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
+              <h4 className="fw-bold">EDITIONS</h4>
+              <div
+                style={{ height: 1, width: "83%", background: "black" }}
+              ></div>
+            </div>
             {extras.map((e, i) => (
               <Row key={i}>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
                     <label htmlFor={`size${i}`} className="form-label">
-                      SIZE* - For unique size, enter 0
+                      Size* - For unique size, enter 0
                     </label>
                     <input
                       type="text"
@@ -1152,7 +1360,7 @@ export default function CreateNFT() {
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
                     <label htmlFor={`rrp${i}`} className="form-label">
-                      {`RRP${i === 0 ? "*" : ""}`}($)
+                      {`Price${i === 0 ? "*" : ""}`}($)
                     </label>
                     <input
                       type="number"
@@ -1168,7 +1376,7 @@ export default function CreateNFT() {
                     <label
                       htmlFor={`numberOfEdition${i}`}
                       className="form-label"
-                    >{`NUMBER OF EDITIONS${i === 0 ? "*" : ""}`}</label>
+                    >{`No of Editions${i === 0 ? "*" : ""}`}</label>
                     <input
                       type="number"
                       className="form-control"
@@ -1180,7 +1388,7 @@ export default function CreateNFT() {
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
-                    <label htmlFor={`sku${i}`} className="form-label">{`SKU${
+                    <label htmlFor={`SKU${i}`} className="form-label">{`SKU${
                       i === 0 ? "*" : ""
                     }`}</label>
                     <input
@@ -1194,93 +1402,34 @@ export default function CreateNFT() {
                 </Col>
               </Row>
             ))}
-
-            {!digitalProduct && (
-              <>
-                <h3 className="fw-bold mt-3 mb-5">
-                  PRODUCT DETAILS FOR PHYSICAL NFT
-                </h3>
-                <Row>
-                  <Col xs={12} sm={12} md={12} lg={12}>
-                    <div className="mb-3 mt-3">
-                      <label htmlFor="releaseDate" className="form-label">
-                        RELEASE DATE*
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        id="releaseDate"
-                        value={releaseDate}
-                        onChange={(e) => setReleaseDate(e.target.value)}
-                      />
-                    </div>
-                  </Col>
-                  <Col xs={12} sm={12} md={12} lg={12}>
-                    <div className="mb-3 mt-3">
-                      <label htmlFor="color" className="form-label">
-                        COLOR
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="color"
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
-                      />
-                    </div>
-                  </Col>
-                  <Col xs={12} sm={12} md={6} lg={6}>
-                    <div className="mb-3 mt-3">
-                      <label htmlFor="material" className="form-label">
-                        MATERIAL
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="material"
-                        value={material}
-                        onChange={(e) => setMaterial(e.target.value)}
-                      />
-                    </div>
-                  </Col>
-                  <Col xs={12} sm={12} md={6} lg={6}>
-                    <div className="mb-3 mt-3">
-                      <label htmlFor="country" className="form-label">
-                        COUNTRY OF MANUFACTURE
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="country"
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                      />
-                    </div>
-                  </Col>
-                  <Col xs={12} sm={12} md={12} lg={12}>
-                    <div className="mb-3 mt-3">
-                      <label
-                        htmlFor="otherCharacteristics"
-                        className="form-label"
-                      >
-                        OTHER SPECIFICATIONS
-                      </label>
-                      <textarea
-                        rows={5}
-                        className="form-control"
-                        id="otherCharacteristics"
-                        value={otherCharacteristics}
-                        onChange={(e) =>
-                          setOtherCharacteristics(e.target.value)
-                        }
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </>
-            )}
-
-            <h3 className="fw-bold mt-3 mb-5">Royalty</h3>
+            <div className="d-flex justify-content-center mt-3">
+              <button
+                className="btn btn-sm px-4"
+                style={{
+                  border: "1px solid #0F91D2",
+                  color: "#0F91D2",
+                }}
+                onClick={() =>
+                  setExtras((_extras) => [
+                    ..._extras,
+                    {
+                      size: "",
+                      rrp: 0,
+                      numOfEdition: 0,
+                      sku: "",
+                    },
+                  ])
+                }
+              >
+                ADD MORE
+              </button>
+            </div>
+            <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
+              <h4 className="fw-bold">ROYALTY LEVEL</h4>
+              <div
+                style={{ height: 1, width: "83%", background: "black" }}
+              ></div>
+            </div>
             <div className="mb-3 mt-3">
               <label htmlFor="royalty" className="form-label">
                 ROYALTY*
@@ -1293,10 +1442,17 @@ export default function CreateNFT() {
                 onChange={useCallback((e) => setRoyalty(e.target.value), [])}
               />
             </div>
-
-            <div className="d-flex justify-content-end">
-              <button className="btn btn-success btn-sm" onClick={handleSubmit}>
-                Create
+            <hr className="my-5" />
+            <div className="d-flex justify-content-center mt-3">
+              <button
+                className="btn btn-sm px-4"
+                style={{
+                  border: "1px solid #0FBC00",
+                  color: "#0FBC00",
+                }}
+                onClick={handleSubmit}
+              >
+                CREATE NFT
               </button>
             </div>
           </div>
