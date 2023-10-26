@@ -467,9 +467,8 @@ export default function CreateNFT() {
                 ...(nftImage
                   ? [
                       {
-                        type: "image",
-                        uri: nftImage,
-                        ext: nftImage.type,
+                        type: nftImage.type,
+                        uri: nftImage                        
                       },
                     ]
                   : []),
