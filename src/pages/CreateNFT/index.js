@@ -532,7 +532,7 @@ export default function CreateNFT() {
       const mintPayload = getMintPayload(_extras);
       console.log("mintPayload", mintPayload);
       const res = await axiosInstance.post("/users/api/v1/mint", mintPayload); ////////////////////
-
+      console.log('mintPayload', res);
       const redemptionUrl = res.data.urls;
 
       // console.log(

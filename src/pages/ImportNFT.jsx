@@ -29,36 +29,40 @@ export default function ImportNFT() {
   }, []);
 
   const handleClickImportBtn = async () => {
-    if(tokenId.length === 0){
-      return;
-    }
-    const res = await axios.get(`${process.env.REACT_APP_HEDERA_API}/api/v1/tokens/${tokenId}/nfts`);
-    if (res && res.data && res.data.nfts) {
-      // setNfts(() => res.data.nfts);
-      let _nfts = [];
-      let itr = 0;
-      for (let nft of res.data.nfts) {
-        let newNft = {};
-        for (let key in nft) {
-          if (key === 'account_id' || key === 'serial_number') {
-            newNft[key] = nft[key];
-          }
-          if (key === "metadata") {
-            let str = atob(nft[key]);
-            str = str.replace("ipfs://", "");
-            console.log({ str });
-            const res = await axios.get(`https://ipfs.io/ipfs/${str}`);
-            console.log(res);
-
-            newNft = { ...newNft, ...res.data, _ipfs: `ipfs://${str}`, checked: false }
-          }
-        }
-        _nfts.push({ ...newNft, id: itr });
-        itr++;
-
+    try{
+      if(tokenId.length === 0){
+        return;
       }
-      console.log({ _nfts });
-      setNfts(() => _nfts)
+      const res = await axios.get(`${process.env.REACT_APP_HEDERA_API}/api/v1/tokens/${tokenId}/nfts`);
+      if (res && res.data && res.data.nfts) {
+        // setNfts(() => res.data.nfts);
+        let _nfts = [];
+        let itr = 0;
+        for (let nft of res.data.nfts) {
+          let newNft = {};
+          for (let key in nft) {
+            if (key === 'account_id' || key === 'serial_number') {
+              newNft[key] = nft[key];
+            }
+            if (key === "metadata") {
+              let str = atob(nft[key]);
+              str = str.replace("ipfs://", "");
+              console.log({ str });
+              const res = await axios.get(`https://ipfs.io/ipfs/${str}`);
+              console.log(res);
+  
+              newNft = { ...newNft, ...res.data, _ipfs: `ipfs://${str}`, checked: false }
+            }
+          }
+          _nfts.push({ ...newNft, id: itr });
+          itr++;
+  
+        }
+        console.log({ _nfts });
+        setNfts(() => _nfts)
+      }
+    }catch(e){
+      console.log(e);
     }
   }
 
