@@ -153,11 +153,10 @@ export default function CreateNFT() {
 
   //perklist
   const [selectedPerkList, setSelectedPerkList] = useState([]);
-  const [accessToCapsuleCollectionPerk, setAccessToCapsuleCollectionPerk] =
-    useState("");
-  const [accessToSpecialMediaContentPerk, setAccessToSpecialMediaContentPerk] =
+  const [accessToSpecialCollectionPerk, setAccessToSpecialCollectionPerk] =
     useState("");
   const [genericDiscountPerk, setGenericDiscountPerk] = useState(0);
+  const [warrantyLength, setWarrantyLength] = useState(0);
   const [productRestorationPerk, setProductRestorationPerk] = useState("");
   const [productMaintenancePerk, setProductMaintenancePerk] = useState("");
   const [ticketToEventPerk, setTicketToEventPerk] = useState("");
@@ -202,6 +201,9 @@ export default function CreateNFT() {
 
   //royalty
   const [royalty, setRoyalty] = useState(5);
+  const [collaborationRoyalty, setCollaborationRoyalty] = useState("");
+  const [collaboratorWalletIdNumber, setCollaboratorWalletIdNumber] =
+    useState("");
 
   //allcollections
   const [allCollections, setAllCollections] = useState([]);
@@ -317,69 +319,69 @@ export default function CreateNFT() {
         material,
         otherSpecs: otherCharacteristics,
         perks: [
-          ...(accessToCapsuleCollectionPerk
+          ...(accessToSpecialCollectionPerk
             ? [
-              {
-                perkName: "Access To Capsule Collection",
-                value: accessToCapsuleCollectionPerk,
-              },
-            ]
+                {
+                  perkName: "Access To Capsule Collection",
+                  value: accessToSpecialCollectionPerk,
+                },
+              ]
             : []),
-          ...(accessToSpecialMediaContentPerk
+          ...(warrantyLength
             ? [
-              {
-                perkName: "Access To Special Media Collection",
-                value: accessToSpecialMediaContentPerk,
-              },
-            ]
+                {
+                  perkName: "Warranty Length",
+                  value: warrantyLength,
+                },
+              ]
             : []),
           ...(genericDiscountPerk
             ? [
-              {
-                perkName: "Generic Discount",
-                value: genericDiscountPerk,
-              },
-            ]
+                {
+                  perkName: "Generic Discount",
+                  value: genericDiscountPerk,
+                },
+              ]
             : []),
           ...(productRestorationPerk
             ? [
-              {
-                perkName: "Product Restoreation",
-                value: productRestorationPerk,
-              },
-            ]
+                {
+                  perkName: "Product Restoreation",
+                  value: productRestorationPerk,
+                },
+              ]
             : []),
           ...(productMaintenancePerk
             ? [
-              {
-                perkName: "Product Maintenance",
-                value: productMaintenancePerk,
-              },
-            ]
+                {
+                  perkName: "Product Maintenance",
+                  value: productMaintenancePerk,
+                },
+              ]
             : []),
           ...(ticketToEventPerk
             ? [
-              {
-                perkName: "Ticket To Event",
-                value: ticketToEventPerk,
-              },
-            ]
+                {
+                  perkName: "Ticket To Event",
+                  value: ticketToEventPerk,
+                },
+              ]
             : []),
           ...(vipExperiencePerk
             ? [
-              {
-                perkName: "Vip Experience",
-                value: vipExperiencePerk,
-              },
-            ]
+                {
+                  perkName: "Vip Experience",
+                  value: vipExperiencePerk,
+                },
+              ]
             : []),
           ...(otherPerk
             ? [
-              {
-                perkName: "Other",
-                value: otherPerk,
-              },
-            ]
+                {
+                  perkName: "Other",
+                  value: otherPerk,
+                },
+              ]
             : []),
         ],
         editions: +numOfVariants || 0,
@@ -403,8 +405,7 @@ export default function CreateNFT() {
       otherCharacteristics,
       numOfVariants,
       royalty,
-      accessToCapsuleCollectionPerk,
-      accessToSpecialMediaContentPerk,
+      accessToSpecialCollectionPerk,
       genericDiscountPerk,
       productMaintenancePerk,
       productRestorationPerk,
@@ -463,10 +464,12 @@ export default function CreateNFT() {
               description: description,
               image: nftImage,
               type: nftImage?.type,
-              files: perkFile.filter(item => item).map(_item => ({
-                type: _item.type,
-                uri: _item
-              })),
+              files: perkFile
+                .filter((item) => item)
+                .map((_item) => ({
+                  type: _item.type,
+                  uri: _item,
+                })),
               properties: {
                 ...(collectionName ? { collectionName } : {}),
                 ...(brand ? { brand } : {}),
@@ -489,25 +492,23 @@ export default function CreateNFT() {
                 ...(royalty ? { royalty: +royalty || 0 } : {}),
                 ...(selectedPerkList.length || true
                   ? {
-                    perks: JSON.stringify({
-                      ...(accessToCapsuleCollectionPerk
-                        ? { accessToCapsuleCollectionPerk }
-                        : {}),
-                      ...(accessToSpecialMediaContentPerk
-                        ? { accessToSpecialMediaContentPerk }
-                        : {}),
-                      ...(genericDiscountPerk ? { genericDiscountPerk } : {}),
-                      ...(productRestorationPerk
-                        ? { productRestorationPerk }
-                        : {}),
-                      ...(productMaintenancePerk
-                        ? { productMaintenancePerk }
-                        : {}),
-                      ...(ticketToEventPerk ? { ticketToEventPerk } : {}),
-                      ...(vipExperiencePerk ? { vipExperiencePerk } : {}),
-                      ...(otherPerk ? { otherPerk } : {}),
-                    }),
-                  }
+                      perks: JSON.stringify({
+                        ...(accessToSpecialCollectionPerk
+                          ? { accessToSpecialCollectionPerk }
+                          : {}),
+                        ...(warrantyLength ? { warrantyLength } : {}),
+                        ...(genericDiscountPerk ? { genericDiscountPerk } : {}),
+                        ...(productRestorationPerk
+                          ? { productRestorationPerk }
+                          : {}),
+                        ...(productMaintenancePerk
+                          ? { productMaintenancePerk }
+                          : {}),
+                        ...(ticketToEventPerk ? { ticketToEventPerk } : {}),
+                        ...(vipExperiencePerk ? { vipExperiencePerk } : {}),
+                        ...(otherPerk ? { otherPerk } : {}),
+                      }),
+                    }
                   : {}),
               },
             }),
@@ -532,7 +533,7 @@ export default function CreateNFT() {
       const mintPayload = getMintPayload(_extras);
       console.log("mintPayload", mintPayload);
       const res = await axiosInstance.post("/users/api/v1/mint", mintPayload); ////////////////////
-      console.log('mintPayload', res);
+      console.log("mintPayload", res);
       const redemptionUrl = res.data.urls;
 
       // console.log(
@@ -696,7 +697,11 @@ export default function CreateNFT() {
   const handlePerkFileChange = (event, index) => {
     console.log(event.target.files);
     let file = event.target.files[0];
-    if (!file?.type.includes("image") && !file?.type.includes("pdf") && !file?.type.includes("txt")) {
+    if (
+      !file?.type.includes("image") &&
+      !file?.type.includes("pdf") &&
+      !file?.type.includes("txt")
+    ) {
       return;
     }
     const _perkArr = [...perkFile];
@@ -715,8 +720,10 @@ export default function CreateNFT() {
   };
 
   const removeFile = (index) => {
-    setPerkFile(_perkFile => _perkFile.filter((item, _index) => _index !== index));
-  }
+    setPerkFile((_perkFile) =>
+      _perkFile.filter((item, _index) => _index !== index)
+    );
+  };
 
   return (
     <Container className="pt-5">
@@ -760,7 +767,6 @@ export default function CreateNFT() {
                 </div>
               </Col>
             </Row>
-
             <div className="mb-3">
               <label htmlFor="nftName" className="form-label">
                 PRODUCT NAME*
@@ -973,6 +979,7 @@ export default function CreateNFT() {
                     id="category"
                     name="category"
                     value={category}
+                    placeholder="Create a category."
                     onChange={useCallback(
                       (e) => setCategory(e.target.value),
                       []
@@ -1072,287 +1079,13 @@ export default function CreateNFT() {
                 </Row>
               </>
             )}
-
-            <Row>
-              <Col xs={12} md={6} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label
-                    htmlFor="accessToCapsuleCollectionPerk"
-                    className="form-label"
-                  >
-                    ACCESS TO CAPSULE COLLECTION
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="accessToCapsuleCollectionPerk"
-                    name="accessToCapsuleCollectionPerk"
-                    value={accessToCapsuleCollectionPerk}
-                    onChange={useCallback(
-                      (e) => setAccessToCapsuleCollectionPerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label
-                    htmlFor="accessToSpecialMediaContentPerk"
-                    className="form-label"
-                  >
-                    ACCESS TO SPECIAL MEDIA CONTENT
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="accessToSpecialMediaContentPerk"
-                    name="accessToSpecialMediaContentPerk"
-                    value={accessToSpecialMediaContentPerk}
-                    onChange={useCallback(
-                      (e) => setAccessToSpecialMediaContentPerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label htmlFor="genericDiscountPerk" className="form-label">
-                    GENERIC DISCOUNT
-                  </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="genericDiscountPerk"
-                    name="genericDiscountPerk"
-                    value={genericDiscountPerk}
-                    onChange={useCallback(
-                      (e) => setGenericDiscountPerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label
-                    htmlFor="productRestorationPerk"
-                    className="form-label"
-                  >
-                    PRODUCT RESTORATION
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="productRestorationPerk"
-                    name="productRestorationPerk"
-                    value={productRestorationPerk}
-                    onChange={useCallback(
-                      (e) => setProductRestorationPerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label
-                    htmlFor="productMaintenancePerk"
-                    className="form-label"
-                  >
-                    PRODUCT MAINTENANCE
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="productMaintenancePerk"
-                    name="productMaintenancePerk"
-                    value={productMaintenancePerk}
-                    onChange={useCallback(
-                      (e) => setProductMaintenancePerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={6} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label htmlFor="ticketToEventPerk" className="form-label">
-                    TICKET TO EVENT
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="ticketToEventPerk"
-                    name="ticketToEventPerk"
-                    value={ticketToEventPerk}
-                    onChange={useCallback(
-                      (e) => setTicketToEventPerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label htmlFor="vipExperiencePerk" className="form-label">
-                    VIP EXPERIENCE
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="vipExperiencePerk"
-                    name="vipExperiencePerk"
-                    value={vipExperiencePerk}
-                    onChange={useCallback(
-                      (e) => setVipExperiencePerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-
-              </Col>
-              <Col xs={12} md={4} lg={4}>
-                <div className="mb-3 mt-3">
-                  <label htmlFor="otherPerk" className="form-label">
-                    OTHER
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="otherPerk"
-                    name="otherPerk"
-                    value={otherPerk}
-                    onChange={useCallback(
-                      (e) => setOtherPerk(e.target.value),
-                      []
-                    )}
-                  />
-                </div>
-              </Col>
-              {perkFile.length > 0 && perkFile.map((item, index) => (
-                <div key={index} className="d-flex justify-content-center flex-wrap mb-2">
-                  <Card style={{ borderColor: item ? 'transparent' : "#95959540", }}>
-                    <input
-                      type="file"
-                      ref={perkfileRef[index]}
-                      className="d-none"
-                      onChange={(e) => handlePerkFileChange(e, index)}
-                    />
-                    {item && (
-                      <div className="d-flex justify-content-between align-items-center w-full">
-                        <img src="./file.png" alt="file png" style={{ marginTop: 10 }} />
-                        <div style={{ minWidth: 280, marginLeft: 20, marginRight: 20 }}>
-                          <div className="d-flex justify-content-between">
-                            <h5 style={{ opacity: 0.7 }}>{item?.name}</h5>
-                            <h5>{item?.size > 1024 * 1024 ? `${Math.floor(item?.size * 10 / (1024 * 1024)) / 10}MB` : `${Math.floor(item?.size * 10 / 1024) / 10}KB`}</h5>
-                          </div>
-                          <div className="d-flex justify-content-start flex-wrap" style={{
-                            background: '#0000001A'
-                          }}>
-                            <div className="d-flex justify-content-start flex-wrap" style={{
-                              background: '#0F91D2', height: 5, width: `${Math.floor(item?.size / (1024 * 1024) )}%`
-                            }}>
-                            </div>
-                          </div>
-                        </div>
-                        <svg style={{ marginTop: 10 }} xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23" fill="none" onClick={() => removeFile(index)}>
-                          <circle cx="11.5" cy="11.5" r="11.5" fill="#CBCBCB" />
-                          <path d="M7.36133 7.35938L15.6413 15.6394" stroke="#1D1E1F" />
-                          <path d="M15.6406 7.35938L7.36063 15.6394" stroke="#1D1E1F" />
-                        </svg>
-                      </div>
-                    )}
-                    {!item && (
-                      <div className="px-5 py-2">
-                        <div className="d-flex justify-content-around align-items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="48"
-                            height="48"
-                            viewBox="0 0 48 48"
-                            fill="none"
-                          >
-                            <path
-                              d="M32 32L24 24L16 32"
-                              stroke="#282828"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M24 24V42"
-                              stroke="#282828"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
-                              stroke="#282828"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M32 32L24 24L16 32"
-                              stroke="#282828"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                          <div>
-                            <p className="text-center mb-1">
-                              Select a file or drag and drop here
-                            </p>
-                            <p
-                              className="text-center mb-0"
-                              style={{ color: "#959595", opacity: 0.4 }}
-                            >
-                              JPG, PNG or 3D file size no more than 10MB
-                            </p>
-                          </div>
-                          <div className="d-flex justify-content-center">
-                            <button
-                              className="btn btn-sm px-4"
-                              style={{
-                                border: "1px solid #0F91D2",
-                                color: "#0F91D2",
-                              }}
-                              onClick={() => handlePerkClickImage(index)}
-                            >
-                              SELECT FILE
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-                </div>
-              ))}
-              {perkFile.length < 5 && <div className="d-flex justify-content-center mt-3">
-                <button
-                  className="btn btn-sm px-4"
-                  style={{
-                    border: "1px solid #0F91D2",
-                    color: "#0F91D2",
-                  }}
-                  onClick={() => setPerkFile(_perkFile => [..._perkFile, null])}
-                >
-                  ADD MORE
-                </button>
-              </div>}
-            </Row>
-            <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
+            <div className="d-flex align-items-center justify-content-between mt-5 mb-3">
               <h4 className="fw-bold">EDITIONS</h4>
               <div
                 style={{ height: 1, width: "83%", background: "black" }}
               ></div>
             </div>
+
             {extras.map((e, i) => (
               <Row key={i}>
                 <Col xs={12} sm={12} md={6} lg={3}>
@@ -1400,8 +1133,9 @@ export default function CreateNFT() {
                 </Col>
                 <Col xs={12} sm={12} md={6} lg={3}>
                   <div className="mb-3 mt-3">
-                    <label htmlFor={`SKU${i}`} className="form-label">{`SKU${i === 0 ? "*" : ""
-                      }`}</label>
+                    <label htmlFor={`SKU${i}`} className="form-label">{`SKU${
+                      i === 0 ? "*" : ""
+                    }`}</label>
                     <input
                       type="text"
                       className="form-control"
@@ -1413,7 +1147,7 @@ export default function CreateNFT() {
                 </Col>
               </Row>
             ))}
-            <div className="d-flex justify-content-center mt-3">
+            <div className="d-flex justify-content-center mt-3 mb-5">
               <button
                 className="btn btn-sm px-4"
                 style={{
@@ -1435,26 +1169,612 @@ export default function CreateNFT() {
                 ADD MORE
               </button>
             </div>
+            <div className="d-flex align-items-center justify-content-between mt-5 mb-3">
+              <h4 className="fw-bold">
+                PERKS {!digitalProduct ? `PHYSICAL` : `DIGITAL`}
+              </h4>
+              <div
+                style={{ height: 1, width: "83%", background: "black" }}
+              ></div>
+            </div>
+            {!digitalProduct && (
+              <Row>
+                <Col xs={12} md={6} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label htmlFor="warrantyLength" className="form-label">
+                      Warranty length
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="warrantyLength"
+                      name="warrantyLength"
+                      value={warrantyLength}
+                      onChange={(e) =>
+                        setWarrantyLength(Number(e.target.value))
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col xs={12} md={6} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label
+                      htmlFor="productRestorationPerk"
+                      className="form-label"
+                    >
+                      PRODUCT RESTORATION
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="productRestorationPerk"
+                      name="productRestorationPerk"
+                      value={productRestorationPerk}
+                      onChange={(e) =>
+                        setProductRestorationPerk(e.target.value)
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col xs={12} md={6} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label
+                      htmlFor="productMaintenancePerk"
+                      className="form-label"
+                    >
+                      PRODUCT MAINTENANCE
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="productMaintenancePerk"
+                      name="productMaintenancePerk"
+                      value={productMaintenancePerk}
+                      onChange={(e) =>
+                        setProductMaintenancePerk(e.target.value)
+                      }
+                    />
+                  </div>
+                </Col>
+                <Col xs={12} md={4} lg={3}>
+                  <div className="mt-3">
+                    <label htmlFor="otherPerk" className="form-label">
+                      OTHER
+                    </label>
+                  </div>
+                </Col>
+                {perkFile.length > 0 &&
+                  perkFile.map((item, index) => (
+                    <div key={index} className="mb-0">
+                      <Row>
+                        <Col xs={12} md={4} lg={3}>
+                          <div className="mb-3 mt-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder={item ? item.name : ""}
+                              disabled
+                            />
+                          </div>
+                        </Col>
+                        <Col xs={12} md={8} lg={6}>
+                          <Card
+                            style={{
+                              borderColor: item ? "transparent" : "#95959540",
+                            }}
+                          >
+                            <input
+                              type="file"
+                              ref={perkfileRef[index]}
+                              className="d-none"
+                              onChange={(e) => handlePerkFileChange(e, index)}
+                            />
+                            {item && (
+                              <div className="d-flex justify-content-between align-items-center w-full">
+                                <img
+                                  src="./file.png"
+                                  alt="file png"
+                                  style={{ marginTop: 10 }}
+                                />
+                                <div
+                                  style={{
+                                    flex: 1,
+                                    marginLeft: 20,
+                                    marginRight: 20,
+                                  }}
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <h5 style={{ opacity: 0.7 }}>
+                                      {item?.name}
+                                    </h5>
+                                    <h5>
+                                      {item?.size > 1024 * 1024
+                                        ? `${
+                                            Math.floor(
+                                              (item?.size * 10) / (1024 * 1024)
+                                            ) / 10
+                                          }MB`
+                                        : `${
+                                            Math.floor(
+                                              (item?.size * 10) / 1024
+                                            ) / 10
+                                          }KB`}
+                                    </h5>
+                                  </div>
+                                  <div
+                                    className="d-flex justify-content-start flex-wrap"
+                                    style={{
+                                      background: "#0000001A",
+                                    }}
+                                  >
+                                    <div
+                                      className="d-flex justify-content-start flex-wrap"
+                                      style={{
+                                        background: "#0F91D2",
+                                        height: 5,
+                                        width: `${Math.floor(
+                                          item?.size / (1024 * 1024)
+                                        )}%`,
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+                                <svg
+                                  style={{ marginTop: 10 }}
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="23"
+                                  height="23"
+                                  viewBox="0 0 23 23"
+                                  fill="none"
+                                  onClick={() => removeFile(index)}
+                                >
+                                  <circle
+                                    cx="11.5"
+                                    cy="11.5"
+                                    r="11.5"
+                                    fill="#CBCBCB"
+                                  />
+                                  <path
+                                    d="M7.36133 7.35938L15.6413 15.6394"
+                                    stroke="#1D1E1F"
+                                  />
+                                  <path
+                                    d="M15.6406 7.35938L7.36063 15.6394"
+                                    stroke="#1D1E1F"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                            {!item && (
+                              <div className="px-5 py-2">
+                                <div className="d-flex justify-content-around align-items-center">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 48 48"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M32 32L24 24L16 32"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M24 24V42"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M32 32L24 24L16 32"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                  <div>
+                                    <p className="text-center mb-1">
+                                      Select a file or drag and drop here
+                                    </p>
+                                    <p
+                                      className="text-center mb-0"
+                                      style={{ color: "#959595", opacity: 0.4 }}
+                                    >
+                                      JPG, PNG or 3D file size no more than 10MB
+                                    </p>
+                                  </div>
+                                  <div className="d-flex justify-content-center">
+                                    <button
+                                      className="btn btn-sm px-4"
+                                      style={{
+                                        border: "1px solid #0F91D2",
+                                        color: "#0F91D2",
+                                      }}
+                                      onClick={() =>
+                                        handlePerkClickImage(index)
+                                      }
+                                    >
+                                      SELECT FILE
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </Card>
+                        </Col>
+                      </Row>
+                    </div>
+                  ))}
+                {perkFile.length < 5 && (
+                  <div className="d-flex justify-content-center mt-3">
+                    <button
+                      className="btn btn-sm px-4"
+                      style={{
+                        border: "1px solid #0F91D2",
+                        color: "#0F91D2",
+                      }}
+                      onClick={() =>
+                        setPerkFile((_perkFile) => [..._perkFile, null])
+                      }
+                    >
+                      ADD MORE
+                    </button>
+                  </div>
+                )}
+              </Row>
+            )}
+            {digitalProduct && (
+              <Row>
+                <Col xs={12} md={6} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label
+                      htmlFor="accessToSpecialCollectionPerk"
+                      className="form-label"
+                    >
+                      ACCESS TO CAPSULE COLLECTION
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="accessToSpecialCollectionPerk"
+                      name="accessToSpecialCollectionPerk"
+                      value={accessToSpecialCollectionPerk}
+                      onChange={(e) =>
+                        setAccessToSpecialCollectionPerk(e.target.value)
+                      }
+                    />
+                  </div>
+                </Col>
+
+                <Col xs={12} md={6} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label htmlFor="genericDiscountPerk" className="form-label">
+                      Discount level
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="genericDiscountPerk"
+                      name="genericDiscountPerk"
+                      value={genericDiscountPerk}
+                      onChange={(e) => setGenericDiscountPerk(e.target.value)}
+                    />
+                  </div>
+                </Col>
+                <Col xs={12} md={6} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label htmlFor="ticketToEventPerk" className="form-label">
+                      Ticket to event
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="ticketToEventPerk"
+                      name="ticketToEventPerk"
+                      value={ticketToEventPerk}
+                      onChange={(e) => setTicketToEventPerk(e.target.value)}
+                    />
+                  </div>
+                </Col>
+                <Col xs={12} md={4} lg={3}>
+                  <div className="mb-3 mt-3">
+                    <label htmlFor="vipExperiencePerk" className="form-label">
+                      VIP experience
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="vipExperiencePerk"
+                      name="vipExperiencePerk"
+                      value={vipExperiencePerk}
+                      onChange={(e) => setVipExperiencePerk(e.target.value)}
+                    />
+                  </div>
+                </Col>
+                <Col xs={12} md={4} lg={3}>
+                  <div className="mt-3">
+                    <label htmlFor="otherPerk" className="form-label">
+                      OTHER
+                    </label>
+                  </div>
+                </Col>
+                {perkFile.length > 0 &&
+                  perkFile.map((item, index) => (
+                    <div key={index} className="mb-0">
+                      <Row>
+                        <Col xs={12} md={4} lg={3}>
+                          <div className="mb-3 mt-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder={item ? item.name : ""}
+                              disabled
+                            />
+                          </div>
+                        </Col>
+                        <Col xs={12} md={8} lg={6}>
+                          <Card
+                            style={{
+                              borderColor: item ? "transparent" : "#95959540",
+                            }}
+                          >
+                            <input
+                              type="file"
+                              ref={perkfileRef[index]}
+                              className="d-none"
+                              onChange={(e) => handlePerkFileChange(e, index)}
+                            />
+                            {item && (
+                              <div className="d-flex justify-content-between align-items-center w-full">
+                                <img
+                                  src="./file.png"
+                                  alt="file png"
+                                  style={{ marginTop: 10 }}
+                                />
+                                <div
+                                  style={{
+                                    flex: 1,
+                                    marginLeft: 20,
+                                    marginRight: 20,
+                                  }}
+                                >
+                                  <div className="d-flex justify-content-between">
+                                    <h5 style={{ opacity: 0.7 }}>
+                                      {item?.name}
+                                    </h5>
+                                    <h5>
+                                      {item?.size > 1024 * 1024
+                                        ? `${
+                                            Math.floor(
+                                              (item?.size * 10) / (1024 * 1024)
+                                            ) / 10
+                                          }MB`
+                                        : `${
+                                            Math.floor(
+                                              (item?.size * 10) / 1024
+                                            ) / 10
+                                          }KB`}
+                                    </h5>
+                                  </div>
+                                  <div
+                                    className="d-flex justify-content-start flex-wrap"
+                                    style={{
+                                      background: "#0000001A",
+                                    }}
+                                  >
+                                    <div
+                                      className="d-flex justify-content-start flex-wrap"
+                                      style={{
+                                        background: "#0F91D2",
+                                        height: 5,
+                                        width: `${Math.floor(
+                                          item?.size / (1024 * 1024)
+                                        )}%`,
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+                                <svg
+                                  style={{ marginTop: 10 }}
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="23"
+                                  height="23"
+                                  viewBox="0 0 23 23"
+                                  fill="none"
+                                  onClick={() => removeFile(index)}
+                                >
+                                  <circle
+                                    cx="11.5"
+                                    cy="11.5"
+                                    r="11.5"
+                                    fill="#CBCBCB"
+                                  />
+                                  <path
+                                    d="M7.36133 7.35938L15.6413 15.6394"
+                                    stroke="#1D1E1F"
+                                  />
+                                  <path
+                                    d="M15.6406 7.35938L7.36063 15.6394"
+                                    stroke="#1D1E1F"
+                                  />
+                                </svg>
+                              </div>
+                            )}
+                            {!item && (
+                              <div className="px-5 py-2">
+                                <div className="d-flex justify-content-around align-items-center">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 48 48"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M32 32L24 24L16 32"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M24 24V42"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M32 32L24 24L16 32"
+                                      stroke="#282828"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                  <div>
+                                    <p className="text-center mb-1">
+                                      Select a file or drag and drop here
+                                    </p>
+                                    <p
+                                      className="text-center mb-0"
+                                      style={{ color: "#959595", opacity: 0.4 }}
+                                    >
+                                      JPG, PNG or 3D file size no more than 10MB
+                                    </p>
+                                  </div>
+                                  <div className="d-flex justify-content-center">
+                                    <button
+                                      className="btn btn-sm px-4"
+                                      style={{
+                                        border: "1px solid #0F91D2",
+                                        color: "#0F91D2",
+                                      }}
+                                      onClick={() =>
+                                        handlePerkClickImage(index)
+                                      }
+                                    >
+                                      SELECT FILE
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </Card>
+                        </Col>
+                      </Row>
+                    </div>
+                  ))}
+                {perkFile.length < 5 && (
+                  <div className="d-flex justify-content-center mt-3">
+                    <button
+                      className="btn btn-sm px-4"
+                      style={{
+                        border: "1px solid #0F91D2",
+                        color: "#0F91D2",
+                      }}
+                      onClick={() =>
+                        setPerkFile((_perkFile) => [..._perkFile, null])
+                      }
+                    >
+                      ADD MORE
+                    </button>
+                  </div>
+                )}
+              </Row>
+            )}
             <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
               <h4 className="fw-bold">ROYALTY LEVEL</h4>
               <div
                 style={{ height: 1, width: "83%", background: "black" }}
               ></div>
             </div>
-            <div className="mb-3 mt-3">
-              <label htmlFor="royalty" className="form-label">
-                ROYALTY*
-              </label>
-              <input
-                type="number"
-                className="form-control"
-                id="royalty"
-                value={royalty}
-                onChange={useCallback((e) => setRoyalty(e.target.value), [])}
-              />
-            </div>
+            <Row>
+              <Col xs={12} md={6} lg={3}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="royalty" className="form-label">
+                    ROYALTY*
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="royalty"
+                    value={royalty}
+                    onChange={useCallback(
+                      (e) => setRoyalty(e.target.value),
+                      []
+                    )}
+                  />
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12} md={6} lg={3}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="collaborationRoyalty" className="form-label">
+                    Collaboration royalty level{" "}
+                    <span style={{ fontSize: "0.7em", color: "grey" }}>
+                      (optional)
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="collaborationRoyalty"
+                    value={collaborationRoyalty}
+                    onChange={useCallback(
+                      (e) => setCollaborationRoyalty(e.target.value),
+                      []
+                    )}
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={6}>
+                <div className="mb-3 mt-3">
+                  <label
+                    htmlFor="collaboratorWalletIdNumber"
+                    className="form-label"
+                  >
+                    Collaborator wallet id number{" "}
+                    <span style={{ fontSize: "0.7em", color: "grey" }}>
+                      (optional)
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="collaboratorWalletIdNumber"
+                    value={collaboratorWalletIdNumber}
+                    onChange={useCallback(
+                      (e) => setCollaboratorWalletIdNumber(e.target.value),
+                      []
+                    )}
+                  />
+                </div>
+              </Col>
+            </Row>
+
             <hr className="my-5" />
-            <div className="d-flex justify-content-center mt-3">
+            <div className="d-flex justify-content-center mt-0 mb-3">
               <button
                 className="btn btn-sm px-4"
                 style={{

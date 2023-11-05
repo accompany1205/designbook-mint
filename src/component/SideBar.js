@@ -201,6 +201,7 @@ const Sidebar = () => {
     const currentUrl = window.location.href;
     const route = currentUrl.split("/")[currentUrl.split("/").length - 1];
     console.log(route);
+    console.log(isLoggedIn);
     if (route !== "login" && !isLoggedIn) {
       navigate("/login");
     }
