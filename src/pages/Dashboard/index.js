@@ -211,7 +211,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {(account.fees_paid_hbar * rate).toFixed(2)}$
+                            {(account?.fees_paid_hbar * rate).toFixed(2)}$
                           </div>
                         </td>
                         <td>
@@ -224,7 +224,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {account.fees_paid_hbar.toFixed(2)}HBAR
+                            {account?.fees_paid_hbar.toFixed(2)}HBAR
                           </div>
                         </td>
                       </tr>
