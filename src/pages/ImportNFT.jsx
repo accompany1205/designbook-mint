@@ -7,9 +7,7 @@ import axios from "axios";
 import { ipfsUtil } from "../utils/filters";
 
 export default function ImportNFT() {
-
   const { user } = useContext(AuthContext);
-
 
   const [tokenId, setTokenId] = useState("");
   const [nfts, setNfts] = useState([]);
@@ -25,15 +23,16 @@ export default function ImportNFT() {
   const [size, setSize] = useState(0);
   const [price, setPrice] = useState(0);
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const handleClickImportBtn = async () => {
-    try{
-      if(tokenId.length === 0){
+    try {
+      if (tokenId.length === 0) {
         return;
       }
-      const res = await axios.get(`${process.env.REACT_APP_HEDERA_API}/api/v1/tokens/${tokenId}/nfts`);
+      const res = await axios.get(
+        `${process.env.REACT_APP_HEDERA_API}/api/v1/tokens/${tokenId}/nfts`
+      );
       if (res && res.data && res.data.nfts) {
         // setNfts(() => res.data.nfts);
         let _nfts = [];
@@ -41,7 +40,7 @@ export default function ImportNFT() {
         for (let nft of res.data.nfts) {
           let newNft = {};
           for (let key in nft) {
-            if (key === 'account_id' || key === 'serial_number') {
+            if (key === "account_id" || key === "serial_number") {
               newNft[key] = nft[key];
             }
             if (key === "metadata") {
@@ -50,31 +49,37 @@ export default function ImportNFT() {
               console.log({ str });
               const res = await axios.get(`https://ipfs.io/ipfs/${str}`);
               console.log(res);
-  
-              newNft = { ...newNft, ...res.data, _ipfs: `ipfs://${str}`, checked: false }
+
+              newNft = {
+                ...newNft,
+                ...res.data,
+                _ipfs: `ipfs://${str}`,
+                checked: false,
+              };
             }
           }
           _nfts.push({ ...newNft, id: itr });
           itr++;
-  
         }
         console.log({ _nfts });
-        setNfts(() => _nfts)
+        setNfts(() => _nfts);
       }
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const handleChangeCheckbox = (e, nft, index) => {
     const isChecked = e.target.checked;
-    setNfts(_nfts => _nfts.map((_nft, _index) => {
-      if (_nft.id === nft.id) {
-        return { ...nft, checked: !nft.checked }
-      } else {
-        return _nft;
-      }
-    }))
+    setNfts((_nfts) =>
+      _nfts.map((_nft, _index) => {
+        if (_nft.id === nft.id) {
+          return { ...nft, checked: !nft.checked };
+        } else {
+          return _nft;
+        }
+      })
+    );
     if (isChecked) {
       setSelectedNfts((prevSelectedNfts) => [...prevSelectedNfts, nft]);
       setCheckedAll(selectedNfts.length == nfts.length - 1);
@@ -84,15 +89,17 @@ export default function ImportNFT() {
       );
       setCheckedAll(() => false);
     }
-  }
+  };
   const handleChangeCheckboxAll = (e) => {
     // const newCheckedAll = e.target.checked;
-    const newSelectedNfts = !checkedAll ? [...nfts].map(nft => ({ ...nft, checked: true })) : [...nfts].map(nft => ({ ...nft, checked: false }));
+    const newSelectedNfts = !checkedAll
+      ? [...nfts].map((nft) => ({ ...nft, checked: true }))
+      : [...nfts].map((nft) => ({ ...nft, checked: false }));
 
-    setSelectedNfts(() => !checkedAll ? [...nfts] : []);
+    setSelectedNfts(() => (!checkedAll ? [...nfts] : []));
     setNfts(() => newSelectedNfts);
     setCheckedAll(() => !checkedAll);
-  }
+  };
 
   const handleClose = () => {
     setShow(() => false);
@@ -100,20 +107,30 @@ export default function ImportNFT() {
   const handleSave = () => {
     console.log(user);
     console.log(selectedNfts);
-    const res = axiosInstance.post('/users/api/outsite-mint', {
-      poolName, brand, sku, color, size, details: selectedNfts, tokenId: selectedNfts[0].account_id, partnerId: user?.id || 0, price
-    })
+    const res = axiosInstance.post("/users/api/outsite-mint", {
+      poolName,
+      brand,
+      sku,
+      color,
+      size,
+      details: selectedNfts,
+      tokenId: selectedNfts[0].account_id,
+      partnerId: user?.id || 0,
+      price,
+    });
     console.log({ res });
     setShow(() => false);
   };
   const handleShow = () => {
     setShow(true);
-  }
+  };
   return (
     <Container className="pt-5">
-      <h2> Import NFTs </h2>
+      <h2 className="text-center fw-bold"> Import NFT minted externally</h2>
       <div className="mb-3 mt-3">
-        <label htmlFor="tokenId" className="form-label">TokenID of NFT</label>
+        <label htmlFor="tokenId" className="form-label">
+          TokenID of NFT
+        </label>
         <input
           type="text"
           className="form-control"
@@ -121,66 +138,100 @@ export default function ImportNFT() {
           name="tokenId"
           value={tokenId}
           placeholder="Type in the tokenId of target NFT"
-          onChange={useCallback(
-            (e) => setTokenId(e.target.value),
-            []
-          )}
+          onChange={useCallback((e) => setTokenId(e.target.value), [])}
         />
         <div className="d-flex align-items-center justify-content-between">
-          <button className="btn btn-secondary btn-md mt-3" onClick={() => handleClickImportBtn()}> Import NFT</button>
-          {selectedNfts.length > 0 &&
-            <button className="btn btn-primary btn-md mt-3" onClick={() => handleShow()}> Add to DesignBook</button>
-          }
+          <button
+            className="mt-3"
+            style={{
+              border: "1px solid #0F91D2",
+              padding: "0.6em 6em",
+              fontWeight: "bold",
+              borderRadius: 5,
+              color: "#0F91D2",
+              background: "transparent",
+            }}
+            onClick={() => handleClickImportBtn()}
+          >
+            Import NFT
+          </button>
+          {selectedNfts.length > 0 && (
+            <button
+              className="mt-3"
+              style={{
+                border: "1px solid #0F91D2",
+                padding: "0.6em 6em",
+                fontWeight: "bold",
+                borderRadius: 5,
+                color: "#0F91D2",
+                background: "transparent",
+              }}
+              onClick={() => handleShow()}
+            >
+              Add to DesignBook
+            </button>
+          )}
         </div>
       </div>
 
       <div className="row">
-        {nfts.length > 0 &&
-          <h4>Number: {nfts.length}</h4>
-        }
+        {nfts.length > 0 && <h4>Number: {nfts.length}</h4>}
         {nfts.length > 0 && (
           <table className="table table-hover table-bordered">
             <thead>
               <tr>
-                {['image', 'name', 'account_id', 'serial_number'].map((key, index) => {
-                  if (Object.keys(nfts[0]).indexOf(key) >= 0)
-                    return <th key={index}>{key.toLocaleUpperCase()}</th>
-                })}
+                {["image", "name", "account_id", "serial_number"].map(
+                  (key, index) => {
+                    if (Object.keys(nfts[0]).indexOf(key) >= 0)
+                      return <th key={index}>{key.toLocaleUpperCase()}</th>;
+                  }
+                )}
                 <th className="text-center">
-                  <input type="checkbox" className="form-check-input" checked={checkedAll} onClick={(e) => handleChangeCheckboxAll(e)} />
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    checked={checkedAll}
+                    onClick={(e) => handleChangeCheckboxAll(e)}
+                  />
                 </th>
               </tr>
             </thead>
             <tbody>
               {nfts.map((nft, index) => (
                 <>
-                  <tr
-                    key={index}
-                  >
-                    {['image', 'name', 'account_id', 'serial_number'].map((key, _index) => {
-                      if (Object.keys(nft).indexOf(key) >= 0) {
-                        if (key === "image") {
-                          return (
-                            <td
-                              key={_index}
-                              data-bs-toggle="collapse"
-                              data-bs-target={`#multiCollapseExample${index}`}
-                            >
-                              <img src={ipfsUtil(nft[key])} alt="nft image" style={{ width: "5%", borderRadius: "10%" }} />
-                            </td>
-                          )
-                        } else {
-                          return (
-                            <td
-                              key={_index}
-                              className="text-center"
-                              data-bs-toggle="collapse"
-                              data-bs-target={`#multiCollapseExample${index}`}
-                            >{nft[key]}</td>
-                          )
+                  <tr key={index}>
+                    {["image", "name", "account_id", "serial_number"].map(
+                      (key, _index) => {
+                        if (Object.keys(nft).indexOf(key) >= 0) {
+                          if (key === "image") {
+                            return (
+                              <td
+                                key={_index}
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#multiCollapseExample${index}`}
+                              >
+                                <img
+                                  src={ipfsUtil(nft[key])}
+                                  alt="nft image"
+                                  style={{ width: "5%", borderRadius: "10%" }}
+                                />
+                              </td>
+                            );
+                          } else {
+                            return (
+                              <td
+                                key={_index}
+                                className="text-center"
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#multiCollapseExample${index}`}
+                              >
+                                {nft[key]}
+                              </td>
+                            );
+                          }
                         }
                       }
-                    })}
+                    )}
                     <td className="text-center">
                       <input
                         type="checkbox"
@@ -192,20 +243,48 @@ export default function ImportNFT() {
                   </tr>
                   <tr
                     className={`collapse`}
-                    id={`multiCollapseExample${index}`}>
+                    id={`multiCollapseExample${index}`}
+                  >
                     <td colSpan={5}>
                       <div className="card p-3 mb-3">
                         {Object.keys(nft).map((key, _index) => {
                           // if(key === "image") console.log(typeof nft[key], nft);
-                          if (typeof nft[key] !== 'object' && typeof nft[key] !== 'array') {
-                            if (key === 'description') {
-                              return <div key={_index} className="overflow-hidden"><span>{key}: </span><p>{nft[key]}</p></div>
+                          if (
+                            typeof nft[key] !== "object" &&
+                            typeof nft[key] !== "array"
+                          ) {
+                            if (key === "description") {
+                              return (
+                                <div key={_index} className="overflow-hidden">
+                                  <span>{key}: </span>
+                                  <p>{nft[key]}</p>
+                                </div>
+                              );
                             } else if (key === "image") {
-                              return <p key={_index} className="d-flex justify-content-between align-items-center overflow-hidden"><span>{key}: </span><img src={ipfsUtil(nft[key])} alt="nft image" className="w-25" /></p>
+                              return (
+                                <p
+                                  key={_index}
+                                  className="d-flex justify-content-between align-items-center overflow-hidden"
+                                >
+                                  <span>{key}: </span>
+                                  <img
+                                    src={ipfsUtil(nft[key])}
+                                    alt="nft image"
+                                    className="w-25"
+                                  />
+                                </p>
+                              );
                             } else {
-                              return <p key={_index} className="d-flex justify-content-between align-items-center overflow-hidden"><span>{key}: </span><span>{nft[key]}</span></p>
+                              return (
+                                <p
+                                  key={_index}
+                                  className="d-flex justify-content-between align-items-center overflow-hidden"
+                                >
+                                  <span>{key}: </span>
+                                  <span>{nft[key]}</span>
+                                </p>
+                              );
                             }
-
                           }
                         })}
                       </div>
@@ -236,19 +315,25 @@ export default function ImportNFT() {
           </div>
         ))} */}
       </div>
-      <Modal show={modalShow} onHide={handleClose} size="lg" aria-labelledby="example-custom-modal-styling-title" centered>
+      <Modal
+        show={modalShow}
+        onHide={handleClose}
+        size="lg"
+        aria-labelledby="example-custom-modal-styling-title"
+        centered
+      >
         <Modal.Header closeButton>
           <div className="d-flex align-items-end justify-content-between fw-bold w-auto">
-            <h3>
-              Move to DesignBook
-            </h3>
+            <h3>Move to DesignBook</h3>
             <h5>Total({selectedNfts.length})</h5>
           </div>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
             <div className="mb-3 mt-3">
-              <label htmlFor="poolName" className="form-label">Pool Name</label>
+              <label htmlFor="poolName" className="form-label">
+                Pool Name
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -256,14 +341,13 @@ export default function ImportNFT() {
                 name="poolName"
                 value={poolName}
                 placeholder="Type in the Pool Name"
-                onChange={useCallback(
-                  (e) => setPoolName(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setPoolName(e.target.value), [])}
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="brand" className="form-label">Brand</label>
+              <label htmlFor="brand" className="form-label">
+                Brand
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -271,14 +355,13 @@ export default function ImportNFT() {
                 name="brand"
                 value={brand}
                 placeholder="Type in the Brand"
-                onChange={useCallback(
-                  (e) => setBrand(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setBrand(e.target.value), [])}
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="sku" className="form-label">SKU</label>
+              <label htmlFor="sku" className="form-label">
+                SKU
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -286,14 +369,13 @@ export default function ImportNFT() {
                 name="sku"
                 value={sku}
                 placeholder="Type in the SKU"
-                onChange={useCallback(
-                  (e) => setSku(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setSku(e.target.value), [])}
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="color" className="form-label">Color</label>
+              <label htmlFor="color" className="form-label">
+                Color
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -301,14 +383,13 @@ export default function ImportNFT() {
                 name="color"
                 value={color}
                 placeholder="Type in the Color"
-                onChange={useCallback(
-                  (e) => setColor(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setColor(e.target.value), [])}
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="size" className="form-label">Size</label>
+              <label htmlFor="size" className="form-label">
+                Size
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -316,14 +397,13 @@ export default function ImportNFT() {
                 name="size"
                 value={size}
                 placeholder="Type in the Size"
-                onChange={useCallback(
-                  (e) => setSize(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setSize(e.target.value), [])}
               />
             </div>
             <div className="mb-3 mt-3">
-              <label htmlFor="price" className="form-label">Price</label>
+              <label htmlFor="price" className="form-label">
+                Price
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -331,10 +411,7 @@ export default function ImportNFT() {
                 name="price"
                 value={price}
                 placeholder="Type in the Price"
-                onChange={useCallback(
-                  (e) => setPrice(e.target.value),
-                  []
-                )}
+                onChange={useCallback((e) => setPrice(e.target.value), [])}
               />
             </div>
           </div>
@@ -348,7 +425,6 @@ export default function ImportNFT() {
           </Button>
         </Modal.Footer>
       </Modal>
-
-    </Container >
+    </Container>
   );
 }

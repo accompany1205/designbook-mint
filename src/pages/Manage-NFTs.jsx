@@ -3,17 +3,31 @@ import { Container, Dropdown, DropdownButton } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../contexts/AuthContext";
 import { Modal } from "react-bootstrap";
+import { MultiSelect } from "primereact/multiselect";
+import { tab } from "@testing-library/user-event/dist/tab";
 
 export default function ManageNFTs() {
   const [tableData, setTableData] = useState([]);
   const [productData, setProductData] = useState([]);
+  const [selectedProductData, setSelectedProductData] = useState([]);
   const [collectionData, setCollectionData] = useState([]);
+  const [selectedCollectionData, setSelectedCollectionData] = useState([]);
   const [skuData, setSkuData] = useState([]);
+  const [selectedSkuData, setSelectedSkuData] = useState([]);
   const [ptableData, setPtableData] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [activeNft, setActiveNft] = useState(null);
   const [isDown, setDown] = useState(false);
   const [rowIdArr, setRowIdArr] = useState([]);
+
+  const [selectedCities, setSelectedCities] = useState(null);
+  const cities = [
+    { name: "New York", code: "NY" },
+    { name: "Rome", code: "RM" },
+    { name: "London", code: "LDN" },
+    { name: "Istanbul", code: "IST" },
+    { name: "Paris", code: "PRS" },
+  ];
 
   useEffect(() => {
     getNftData();
@@ -45,23 +59,57 @@ export default function ManageNFTs() {
         )
       );
     }
+    const _productData=[];
+    const _collectionData=[];
+    const _skuData=[];
+    for(let item of tableData){
+      if(_productData.indexOf(item.productName) < 0){
+        _productData.push(item.productName);
+      }
+      if(_collectionData.indexOf(item.collectionName) < 0){
+        _collectionData.push(item.collectionName);
+      }
+      if(_skuData.indexOf(item.sku) < 0){
+        _skuData.push(item.sku);
+      }
+    }
+    setProductData(_productData);
+    setCollectionData(_collectionData);
+    setSkuData(_skuData);
+    setSelectedProductData([])
+    setSelectedCollectionData([]);
+    setSelectedSkuData([]);
   }, [tableData]);
+
+  useEffect(()=>{
+    let data = [...tableData];
+    if(selectedProductData.length > 0){
+      data = data.filter(item=> selectedProductData.indexOf(item.productName) >= 0);
+    }
+    if(selectedCollectionData.length > 0){
+      data = data.filter(item=> selectedCollectionData.indexOf(item.collectionName) >= 0);
+    }
+    if(selectedSkuData.length > 0){
+      data = data.filter(item=> selectedSkuData.indexOf(item.sku) >= 0);
+    }
+    setPtableData(data);
+  }, [selectedProductData, selectedCollectionData, selectedSkuData])
   const handleClick = (direction) => {
-    if(direction) {
+    if (direction) {
       setPtableData(
-        tableData.sort((a, b) =>
+        ptableData.sort((a, b) =>
           a.datetime_created.localeCompare(b.datetime_created)
         )
       );
-    }else{
+    } else {
       setPtableData(
-        tableData.sort((a, b) =>
+        ptableData.sort((a, b) =>
           b.datetime_created.localeCompare(a.datetime_created)
         )
       );
     }
     setDown(direction);
-  }
+  };
   const handleClickNFTDelete = async () => {
     try {
       for (let id of rowIdArr) {
@@ -129,8 +177,8 @@ export default function ManageNFTs() {
           <tr>
             <td></td>
             <td colSpan={13}>
-              <div className="d-flex justify-content-between align-items-center mt-3 mb-3">
-                <div className="d-flex justify-content-start align-items-center">
+              <div className="d-flex justify-content-between align-items-stretch mt-3 mb-3">
+                <div className="d-flex justify-content-start align-items-stretch">
                   <button
                     type="button"
                     style={{
@@ -169,54 +217,40 @@ export default function ManageNFTs() {
                       Filters
                     </span>
                   </button>
-                  <Dropdown>
-                    <Dropdown.Toggle id="dropdown-product">
-                      Product
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">
-                        Another action
-                      </Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">
-                        Something else
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown>
-                    <Dropdown.Toggle id="dropdown-collection">
-                      Collection
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">
-                        Another action
-                      </Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">
-                        Something else
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  <Dropdown>
-                    <Dropdown.Toggle id="dropdown-sku">SKU</Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">
-                        Another action
-                      </Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">
-                        Something else
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                  <MultiSelect
+                    value={selectedProductData}
+                    onChange={(e) => setSelectedProductData(e.value)}
+                    options={productData}
+                    // optionLabel="name"
+                    display="chip"
+                    placeholder="Select products"
+                    maxSelectedLabels={2}
+                    className="w-full md:w-20rem"
+                  />
+                  <MultiSelect
+                    value={selectedCollectionData}
+                    onChange={(e) => setSelectedCollectionData(e.value)}
+                    options={collectionData}
+                    // optionLabel="name"
+                    display="chip"
+                    placeholder="Select collections"
+                    maxSelectedLabels={2}
+                    className="w-full md:w-20rem"
+                  />
+                  <MultiSelect
+                    value={selectedSkuData}
+                    onChange={(e) => setSelectedSkuData(e.value)}
+                    options={skuData}
+                    // optionLabel="name"
+                    display="chip"
+                    placeholder="Select skus"
+                    maxSelectedLabels={2}
+                    className="w-full md:w-20rem"
+                  />
                 </div>
-                <div>
+                <div className="d-flex align-items-stretch">
                   <button
                     type="button"
-                    className="mb-2"
                     style={{
                       border: "none",
                       borderRadius: "5px",

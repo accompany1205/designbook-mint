@@ -44,11 +44,10 @@ function Dashboard() {
   return (
     <BOX>
       <div className="container">
-        <h2 className="mb-5 fw-bold">Dashboard</h2>
         {account && (
           <Row>
             <Col xs={12} sm={12} md={12} lg={12}>
-              <h4 className="fw-bold"> Account Information </h4>
+              <h2 className="fw-bold"> Account Information </h2>
               <div className="conent">
                 <table className="w-100">
                   <tbody>

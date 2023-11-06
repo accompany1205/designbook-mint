@@ -23,28 +23,28 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
-table,
-tbody,
-tr,
-td {
+.table,
+.table tbody,
+.table tr,
+.table td {
   border: none !important;
 }
-tbody tr td {
+.table tbody tr td {
   background-color: #f5f5f5 !important;
 }
-tbody > tr:first-of-type td {
+.table tbody > tr:first-of-type td {
   background-color: transparent !important;
 }
-tbody tr > td:first-of-type {
+.table .tabletbody tr > td:first-of-type {
   background-color: transparent !important;
 }
-tbody tr {
+.table tbody tr {
   border-bottom: white 1em solid !important;
 }
-thead tr th {
+.table thead tr th {
   padding-bottom: 2em !important;
 }
-tbody > tr:first-of-type > td:nth-of-type(2) {
+.table tbody > tr:first-of-type > td:nth-of-type(2) {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -59,4 +59,7 @@ tbody > tr:first-of-type > td:nth-of-type(2) {
   background-color: #f0f0f0 !important;
   color: #1D1E1F !important;
   font-weight: bold;
+}
+.p-multiselect{
+  margin-left: 2em !important;
 }
