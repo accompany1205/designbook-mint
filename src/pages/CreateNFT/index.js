@@ -751,7 +751,7 @@ export default function CreateNFT() {
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
                   <label htmlFor="collection" className="form-label">
-                    COLLECTION NAME*
+                    COLLECTION NAME* <span style={{color: 'grey', fontSize: '0.7em'}}>(do not include special characters)</span>
                   </label>
                   <input
                     type="text"
