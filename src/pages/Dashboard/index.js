@@ -280,7 +280,7 @@ function Dashboard() {
                             color: "gray",
                           }}
                         >
-                          {account.nfts_minted}
+                          {account.nft_create_failed}
                         </div>
                       </td>
                       <td>

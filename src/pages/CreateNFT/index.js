@@ -751,7 +751,10 @@ export default function CreateNFT() {
               <Col sm={12} md={6}>
                 <div className="mb-3 mt-3">
                   <label htmlFor="collection" className="form-label">
-                    COLLECTION NAME* <span style={{color: 'grey', fontSize: '0.7em'}}>(do not include special characters)</span>
+                    COLLECTION NAME*{" "}
+                    <span style={{ color: "grey", fontSize: "0.7em" }}>
+                      (do not include special characters)
+                    </span>
                   </label>
                   <input
                     type="text"
@@ -1169,14 +1172,16 @@ export default function CreateNFT() {
                 ADD MORE
               </button>
             </div>
-            <div className="d-flex align-items-center justify-content-between mt-5 mb-3">
-              <h4 className="fw-bold">
-                PERKS {!digitalProduct ? `PHYSICAL` : `DIGITAL`}
-              </h4>
-              <div
-                style={{ height: 1, width: "83%", background: "black" }}
-              ></div>
-            </div>
+            {!digitalProduct && (
+              <div className="d-flex align-items-center justify-content-between mt-5 mb-3">
+                <h4 className="fw-bold">
+                  PERKS {`PHYSICAL`}
+                </h4>
+                <div
+                  style={{ height: 1, width: "83%", background: "black" }}
+                ></div>
+              </div>
+            )}
             {!digitalProduct && (
               <Row>
                 <Col xs={12} md={6} lg={3}>
@@ -1236,13 +1241,15 @@ export default function CreateNFT() {
                     />
                   </div>
                 </Col>
-                <Col xs={12} md={4} lg={3}>
-                  <div className="mt-3">
-                    <label htmlFor="otherPerk" className="form-label">
-                      OTHER
-                    </label>
-                  </div>
-                </Col>
+                <Row>
+                  <Col xs={12} md={4} lg={3}>
+                    <div className="mt-3">
+                      <label htmlFor="otherPerk" className="form-label">
+                        OTHER
+                      </label>
+                    </div>
+                  </Col>
+                </Row>
                 {perkFile.length > 0 &&
                   perkFile.map((item, index) => (
                     <div key={index} className="mb-0">
@@ -1435,74 +1442,80 @@ export default function CreateNFT() {
                 )}
               </Row>
             )}
-            {digitalProduct && (
-              <Row>
-                <Col xs={12} md={6} lg={3}>
-                  <div className="mb-3 mt-3">
-                    <label
-                      htmlFor="accessToSpecialCollectionPerk"
-                      className="form-label"
-                    >
-                      ACCESS TO CAPSULE COLLECTION
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="accessToSpecialCollectionPerk"
-                      name="accessToSpecialCollectionPerk"
-                      value={accessToSpecialCollectionPerk}
-                      onChange={(e) =>
-                        setAccessToSpecialCollectionPerk(e.target.value)
-                      }
-                    />
-                  </div>
-                </Col>
+            <div className="d-flex align-items-center justify-content-between mt-5 mb-3">
+              <h4 className="fw-bold">PERKS {`DIGITAL`}</h4>
+              <div
+                style={{ height: 1, width: "83%", background: "black" }}
+              ></div>
+            </div>
+            <Row>
+              <Col xs={12} md={6} lg={3}>
+                <div className="mb-3 mt-3">
+                  <label
+                    htmlFor="accessToSpecialCollectionPerk"
+                    className="form-label"
+                  >
+                    ACCESS TO CAPSULE COLLECTION
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="accessToSpecialCollectionPerk"
+                    name="accessToSpecialCollectionPerk"
+                    value={accessToSpecialCollectionPerk}
+                    onChange={(e) =>
+                      setAccessToSpecialCollectionPerk(e.target.value)
+                    }
+                  />
+                </div>
+              </Col>
 
-                <Col xs={12} md={6} lg={3}>
-                  <div className="mb-3 mt-3">
-                    <label htmlFor="genericDiscountPerk" className="form-label">
-                      Discount level
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="genericDiscountPerk"
-                      name="genericDiscountPerk"
-                      value={genericDiscountPerk}
-                      onChange={(e) => setGenericDiscountPerk(e.target.value)}
-                    />
-                  </div>
-                </Col>
-                <Col xs={12} md={6} lg={3}>
-                  <div className="mb-3 mt-3">
-                    <label htmlFor="ticketToEventPerk" className="form-label">
-                      Ticket to event
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="ticketToEventPerk"
-                      name="ticketToEventPerk"
-                      value={ticketToEventPerk}
-                      onChange={(e) => setTicketToEventPerk(e.target.value)}
-                    />
-                  </div>
-                </Col>
-                <Col xs={12} md={4} lg={3}>
-                  <div className="mb-3 mt-3">
-                    <label htmlFor="vipExperiencePerk" className="form-label">
-                      VIP experience
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="vipExperiencePerk"
-                      name="vipExperiencePerk"
-                      value={vipExperiencePerk}
-                      onChange={(e) => setVipExperiencePerk(e.target.value)}
-                    />
-                  </div>
-                </Col>
+              <Col xs={12} md={6} lg={3}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="genericDiscountPerk" className="form-label">
+                    Discount level
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="genericDiscountPerk"
+                    name="genericDiscountPerk"
+                    value={genericDiscountPerk}
+                    onChange={(e) => setGenericDiscountPerk(e.target.value)}
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={3}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="ticketToEventPerk" className="form-label">
+                    Ticket to event
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ticketToEventPerk"
+                    name="ticketToEventPerk"
+                    value={ticketToEventPerk}
+                    onChange={(e) => setTicketToEventPerk(e.target.value)}
+                  />
+                </div>
+              </Col>
+              <Col xs={12} md={4} lg={3}>
+                <div className="mb-3 mt-3">
+                  <label htmlFor="vipExperiencePerk" className="form-label">
+                    VIP experience
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="vipExperiencePerk"
+                    name="vipExperiencePerk"
+                    value={vipExperiencePerk}
+                    onChange={(e) => setVipExperiencePerk(e.target.value)}
+                  />
+                </div>
+              </Col>
+              {digitalProduct && (
                 <Col xs={12} md={4} lg={3}>
                   <div className="mt-3">
                     <label htmlFor="otherPerk" className="form-label">
@@ -1510,198 +1523,207 @@ export default function CreateNFT() {
                     </label>
                   </div>
                 </Col>
-                {perkFile.length > 0 &&
-                  perkFile.map((item, index) => (
-                    <div key={index} className="mb-0">
-                      <Row>
-                        <Col xs={12} md={4} lg={3}>
-                          <div className="mb-3 mt-3">
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder={item ? item.name : ""}
-                              disabled
-                            />
-                          </div>
-                        </Col>
-                        <Col xs={12} md={8} lg={6}>
-                          <Card
-                            style={{
-                              borderColor: item ? "transparent" : "#95959540",
-                            }}
-                          >
-                            <input
-                              type="file"
-                              ref={perkfileRef[index]}
-                              className="d-none"
-                              onChange={(e) => handlePerkFileChange(e, index)}
-                            />
-                            {item && (
-                              <div className="d-flex justify-content-between align-items-center w-full">
-                                <img
-                                  src="./file.png"
-                                  alt="file png"
-                                  style={{ marginTop: 10 }}
-                                />
-                                <div
-                                  style={{
-                                    flex: 1,
-                                    marginLeft: 20,
-                                    marginRight: 20,
-                                  }}
-                                >
-                                  <div className="d-flex justify-content-between">
-                                    <h5 style={{ opacity: 0.7 }}>
-                                      {item?.name}
-                                    </h5>
-                                    <h5>
-                                      {item?.size > 1024 * 1024
-                                        ? `${
-                                            Math.floor(
-                                              (item?.size * 10) / (1024 * 1024)
-                                            ) / 10
-                                          }MB`
-                                        : `${
-                                            Math.floor(
-                                              (item?.size * 10) / 1024
-                                            ) / 10
-                                          }KB`}
-                                    </h5>
-                                  </div>
+              )}
+              {digitalProduct && (
+                <>
+                  {perkFile.length > 0 &&
+                    perkFile.map((item, index) => (
+                      <div key={index} className="mb-0">
+                        <Row>
+                          <Col xs={12} md={4} lg={3}>
+                            <div className="mb-3 mt-3">
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder={item ? item.name : ""}
+                                disabled
+                              />
+                            </div>
+                          </Col>
+                          <Col xs={12} md={8} lg={6}>
+                            <Card
+                              style={{
+                                borderColor: item ? "transparent" : "#95959540",
+                              }}
+                            >
+                              <input
+                                type="file"
+                                ref={perkfileRef[index]}
+                                className="d-none"
+                                onChange={(e) => handlePerkFileChange(e, index)}
+                              />
+                              {item && (
+                                <div className="d-flex justify-content-between align-items-center w-full">
+                                  <img
+                                    src="./file.png"
+                                    alt="file png"
+                                    style={{ marginTop: 10 }}
+                                  />
                                   <div
-                                    className="d-flex justify-content-start flex-wrap"
                                     style={{
-                                      background: "#0000001A",
+                                      flex: 1,
+                                      marginLeft: 20,
+                                      marginRight: 20,
                                     }}
                                   >
+                                    <div className="d-flex justify-content-between">
+                                      <h5 style={{ opacity: 0.7 }}>
+                                        {item?.name}
+                                      </h5>
+                                      <h5>
+                                        {item?.size > 1024 * 1024
+                                          ? `${
+                                              Math.floor(
+                                                (item?.size * 10) /
+                                                  (1024 * 1024)
+                                              ) / 10
+                                            }MB`
+                                          : `${
+                                              Math.floor(
+                                                (item?.size * 10) / 1024
+                                              ) / 10
+                                            }KB`}
+                                      </h5>
+                                    </div>
                                     <div
                                       className="d-flex justify-content-start flex-wrap"
                                       style={{
-                                        background: "#0F91D2",
-                                        height: 5,
-                                        width: `${Math.floor(
-                                          item?.size / (1024 * 1024)
-                                        )}%`,
+                                        background: "#0000001A",
                                       }}
-                                    ></div>
+                                    >
+                                      <div
+                                        className="d-flex justify-content-start flex-wrap"
+                                        style={{
+                                          background: "#0F91D2",
+                                          height: 5,
+                                          width: `${Math.floor(
+                                            item?.size / (1024 * 1024)
+                                          )}%`,
+                                        }}
+                                      ></div>
+                                    </div>
                                   </div>
-                                </div>
-                                <svg
-                                  style={{ marginTop: 10 }}
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="23"
-                                  height="23"
-                                  viewBox="0 0 23 23"
-                                  fill="none"
-                                  onClick={() => removeFile(index)}
-                                >
-                                  <circle
-                                    cx="11.5"
-                                    cy="11.5"
-                                    r="11.5"
-                                    fill="#CBCBCB"
-                                  />
-                                  <path
-                                    d="M7.36133 7.35938L15.6413 15.6394"
-                                    stroke="#1D1E1F"
-                                  />
-                                  <path
-                                    d="M15.6406 7.35938L7.36063 15.6394"
-                                    stroke="#1D1E1F"
-                                  />
-                                </svg>
-                              </div>
-                            )}
-                            {!item && (
-                              <div className="px-5 py-2">
-                                <div className="d-flex justify-content-around align-items-center">
                                   <svg
+                                    style={{ marginTop: 10 }}
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width="48"
-                                    height="48"
-                                    viewBox="0 0 48 48"
+                                    width="23"
+                                    height="23"
+                                    viewBox="0 0 23 23"
                                     fill="none"
+                                    onClick={() => removeFile(index)}
                                   >
-                                    <path
-                                      d="M32 32L24 24L16 32"
-                                      stroke="#282828"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
+                                    <circle
+                                      cx="11.5"
+                                      cy="11.5"
+                                      r="11.5"
+                                      fill="#CBCBCB"
                                     />
                                     <path
-                                      d="M24 24V42"
-                                      stroke="#282828"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
+                                      d="M7.36133 7.35938L15.6413 15.6394"
+                                      stroke="#1D1E1F"
                                     />
                                     <path
-                                      d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
-                                      stroke="#282828"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                    <path
-                                      d="M32 32L24 24L16 32"
-                                      stroke="#282828"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
+                                      d="M15.6406 7.35938L7.36063 15.6394"
+                                      stroke="#1D1E1F"
                                     />
                                   </svg>
-                                  <div>
-                                    <p className="text-center mb-1">
-                                      Select a file or drag and drop here
-                                    </p>
-                                    <p
-                                      className="text-center mb-0"
-                                      style={{ color: "#959595", opacity: 0.4 }}
+                                </div>
+                              )}
+                              {!item && (
+                                <div className="px-5 py-2">
+                                  <div className="d-flex justify-content-around align-items-center">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="48"
+                                      height="48"
+                                      viewBox="0 0 48 48"
+                                      fill="none"
                                     >
-                                      JPG, PNG or 3D file size no more than 10MB
-                                    </p>
-                                  </div>
-                                  <div className="d-flex justify-content-center">
-                                    <button
-                                      className="btn btn-sm px-4"
-                                      style={{
-                                        border: "1px solid #0F91D2",
-                                        color: "#0F91D2",
-                                      }}
-                                      onClick={() =>
-                                        handlePerkClickImage(index)
-                                      }
-                                    >
-                                      SELECT FILE
-                                    </button>
+                                      <path
+                                        d="M32 32L24 24L16 32"
+                                        stroke="#282828"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M24 24V42"
+                                        stroke="#282828"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M40.7789 36.78C42.7296 35.7165 44.2706 34.0337 45.1587 31.9972C46.0468 29.9607 46.2314 27.6864 45.6834 25.5334C45.1353 23.3803 43.8859 21.471 42.1323 20.1069C40.3786 18.7427 38.2207 18.0014 35.9989 18H33.4789C32.8736 15.6585 31.7453 13.4846 30.1788 11.642C28.6124 9.79927 26.6486 8.33567 24.4351 7.36118C22.2216 6.3867 19.816 5.92669 17.3992 6.01573C14.9823 6.10478 12.6171 6.74057 10.4813 7.8753C8.34552 9.01003 6.49477 10.6142 5.06819 12.5671C3.64161 14.5201 2.67632 16.771 2.2449 19.1508C1.81348 21.5305 1.92715 23.977 2.57737 26.3065C3.22759 28.636 4.39743 30.7877 5.99894 32.6"
+                                        stroke="#282828"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M32 32L24 24L16 32"
+                                        stroke="#282828"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                    <div>
+                                      <p className="text-center mb-1">
+                                        Select a file or drag and drop here
+                                      </p>
+                                      <p
+                                        className="text-center mb-0"
+                                        style={{
+                                          color: "#959595",
+                                          opacity: 0.4,
+                                        }}
+                                      >
+                                        JPG, PNG or 3D file size no more than
+                                        10MB
+                                      </p>
+                                    </div>
+                                    <div className="d-flex justify-content-center">
+                                      <button
+                                        className="btn btn-sm px-4"
+                                        style={{
+                                          border: "1px solid #0F91D2",
+                                          color: "#0F91D2",
+                                        }}
+                                        onClick={() =>
+                                          handlePerkClickImage(index)
+                                        }
+                                      >
+                                        SELECT FILE
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )}
-                          </Card>
-                        </Col>
-                      </Row>
+                              )}
+                            </Card>
+                          </Col>
+                        </Row>
+                      </div>
+                    ))}
+                  {perkFile.length < 5 && (
+                    <div className="d-flex justify-content-center mt-3">
+                      <button
+                        className="btn btn-sm px-4"
+                        style={{
+                          border: "1px solid #0F91D2",
+                          color: "#0F91D2",
+                        }}
+                        onClick={() =>
+                          setPerkFile((_perkFile) => [..._perkFile, null])
+                        }
+                      >
+                        ADD MORE
+                      </button>
                     </div>
-                  ))}
-                {perkFile.length < 5 && (
-                  <div className="d-flex justify-content-center mt-3">
-                    <button
-                      className="btn btn-sm px-4"
-                      style={{
-                        border: "1px solid #0F91D2",
-                        color: "#0F91D2",
-                      }}
-                      onClick={() =>
-                        setPerkFile((_perkFile) => [..._perkFile, null])
-                      }
-                    >
-                      ADD MORE
-                    </button>
-                  </div>
-                )}
-              </Row>
-            )}
+                  )}
+                </>
+              )}
+            </Row>
             <div className="d-flex align-items-center justify-content-between mt-3 mb-5">
               <h4 className="fw-bold">ROYALTY LEVEL</h4>
               <div
