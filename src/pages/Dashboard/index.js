@@ -152,7 +152,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {(account?.wallet_balance_hbar * rate).toFixed(2)}$
+                            {(account?.wallet_balance_hbar * rate)?.toFixed(2)}$
                           </div>
                         </td>
                         <td width="40">
@@ -165,7 +165,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {account?.wallet_balance_hbar.toFixed(2)}HBAR
+                            {account?.wallet_balance_hbar?.toFixed(2)}HBAR
                           </div>
                         </td>
                       </tr>
@@ -181,7 +181,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {(account?.royalties_earned_hbar * rate).toFixed(2)}
+                            {(account?.royalties_earned_hbar * rate)?.toFixed(2)}
                             $
                           </div>
                         </td>
@@ -195,7 +195,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {account?.royalties_earned_hbar.toFixed(2)}HBAR
+                            {account?.royalties_earned_hbar?.toFixed(2)}HBAR
                           </div>
                         </td>
                       </tr>
@@ -211,7 +211,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {(account?.fees_paid_hbar * rate).toFixed(2)}$
+                            {(account?.fees_paid_hbar * rate)?.toFixed(2)}$
                           </div>
                         </td>
                         <td>
@@ -224,7 +224,7 @@ function Dashboard() {
                               maxWidth: "300px",
                             }}
                           >
-                            {account?.fees_paid_hbar.toFixed(2)}HBAR
+                            {account?.fees_paid_hbar?.toFixed(2)}HBAR
                           </div>
                         </td>
                       </tr>
