@@ -42,7 +42,7 @@ body {
   border-bottom: white 1em solid !important;
 }
 .table thead tr th {
-  padding-bottom: 2em !important;
+  padding-bottom: 1em !important;
 }
 .table tbody > tr:first-of-type > td:nth-of-type(2) {
   padding-left: 0 !important;

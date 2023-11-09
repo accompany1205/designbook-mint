@@ -152,7 +152,7 @@ export default function ManageNFTs() {
   };
   return (
     <Container className="pt-5" style={{ maxWidth: "90%" }}>
-      <h2 className="mb-3 text-center fw-bold"> Manage NFT </h2>
+      <h2 className="mb-4 text-center fw-bold"> Manage NFT </h2>
       <table className="table">
         <thead>
           <tr>
