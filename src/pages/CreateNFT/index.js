@@ -629,7 +629,7 @@ export default function CreateNFT() {
         toast.current.show({
           severity: "error",
           summary: "NFT creation failed. Account Balance error Or Hedera chain service Error!",
-          detail: `Name: Error`,
+          detail: `Created: Failed`,
           life: 3000,
         });
         return;
@@ -639,7 +639,7 @@ export default function CreateNFT() {
         severity: "success",
         summary:
           "NFT has been created, please collect the redemption links in manage NFT section!",
-        detail: `Name: Error`,
+        detail: `Created: Success`,
         life: 3000,
       });
     } catch (err) {
@@ -649,8 +649,8 @@ export default function CreateNFT() {
       // toast("NFT creation failed. Please try again", true).dispatch(Toast.Action.SHOW);
       toast.current.show({
         severity: "error",
-        summary: "NFT creation failed. Please try again!",
-        detail: `Name: Error`,
+        summary: "NFT creation failed. Please check the details and try again!",
+        detail: `Creation: Failed`,
         life: 3000,
       });
     }
