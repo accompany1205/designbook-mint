@@ -137,6 +137,8 @@ export default function CreateNFT() {
   // useState stores and updates values input in form and image, so that we can use it for our POST request later on.
   const [nftImage, setNftImage] = useState();
   const [perkFile, setPerkFile] = useState([null]);
+  const [perkFileName, setPerkFileName] = useState([]);
+
   const [heroBannerImage, setHeroBannerImage] = useState();
   const [nft3DFile, setNft3DFile] = useState();
 
@@ -455,6 +457,13 @@ export default function CreateNFT() {
       let imageUrl = "";
       let _extras = [];
       // create ipfs data and post product at the same time.
+      const files = perkFile.map((file, index) => {
+        if (file && perkFileName[index].length > 0) {
+          console.log(file);
+          return new File([file], perkFileName[index], { type: file.type });
+        }
+        return file;
+      });
       for (let i = 0; i < extras.length; i++) {
         if (extras[i].numOfEdition !== 0 && extras[i].sku !== "") {
           const [ipfs] = await Promise.all([
@@ -464,7 +473,7 @@ export default function CreateNFT() {
               description: description,
               image: nftImage,
               type: nftImage?.type,
-              files: perkFile
+              files: files
                 .filter((item) => item)
                 .map((_item) => ({
                   type: _item.type,
@@ -605,6 +614,18 @@ export default function CreateNFT() {
       setIsNFTCreating(false);
       setActiveCustomModal(false);
       setIsNFTCreated(true);
+
+      // Balance error
+      if (res.status !== 200) {
+        toast.current.show({
+          severity: "error",
+          summary: "NFT creation failed. Please check the account balance!",
+          detail: `Name: Error`,
+          life: 3000,
+        });
+        return;
+      }
+
       toast.current.show({
         severity: "success",
         summary:
@@ -648,7 +669,7 @@ export default function CreateNFT() {
             ) : (
               <div
                 className="d-flex justify-content-around align-items-center"
-                vertical
+                vertical="true"
               >
                 <Spinner animation="border" role="status">
                   <span className="visually-hidden">
@@ -719,7 +740,16 @@ export default function CreateNFT() {
     reader.readAsDataURL(file);
   };
 
+  const handleChangeOtherFileName = (fileName, index) => {
+    let fileNameArr = [...perkFileName];
+    fileNameArr[index] = fileName;
+    setPerkFileName(fileNameArr);
+  };
+
   const removeFile = (index) => {
+    setPerkFileName((_perkFileName) =>
+      _perkFileName.filter((item, _index) => _index !== index)
+    );
     setPerkFile((_perkFile) =>
       _perkFile.filter((item, _index) => _index !== index)
     );
@@ -932,20 +962,57 @@ export default function CreateNFT() {
                   >
                     VR/METAVERSE COMPLIANT*
                   </label>
-                  <select
+                  <div>
+                    {!vrOrMetaverseCompliant ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="36"
+                        height="36"
+                        viewBox="0 0 24 24"
+                        onClick={() =>
+                          setVrOrMetaverseCompliant((_value) => !_value)
+                        }
+                      >
+                        <path
+                          fill="none"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4 7.2v9.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h9.606c1.118 0 1.677 0 2.104-.218c.377-.192.683-.498.875-.874c.218-.428.218-.986.218-2.104V7.197c0-1.118 0-1.678-.218-2.105a2.001 2.001 0 0 0-.875-.874C18.48 4 17.92 4 16.8 4H7.2c-1.12 0-1.68 0-2.108.218a1.999 1.999 0 0 0-.874.874C4 5.52 4 6.08 4 7.2Z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="36"
+                        height="36"
+                        viewBox="0 0 24 24"
+                        onClick={() =>
+                          setVrOrMetaverseCompliant((_value) => !_value)
+                        }
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M6.25 3A3.25 3.25 0 0 0 3 6.25v11.5A3.25 3.25 0 0 0 6.25 21h11.5A3.25 3.25 0 0 0 21 17.75V6.25A3.25 3.25 0 0 0 17.75 3H6.25ZM4.5 6.25c0-.966.784-1.75 1.75-1.75h11.5c.966 0 1.75.784 1.75 1.75v11.5a1.75 1.75 0 0 1-1.75 1.75H6.25a1.75 1.75 0 0 1-1.75-1.75V6.25Zm12.78 3.03a.75.75 0 1 0-1.06-1.06l-6.223 6.216L7.78 12.22a.75.75 0 0 0-1.06 1.06l2.745 2.746a.75.75 0 0 0 1.06 0l6.754-6.745Z"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  {/* <select
                     type="text"
                     className="form-control"
                     id="vrOrMetaverseCompliant"
                     name="vrOrMetaverseCompliant"
                     value={vrOrMetaverseCompliant}
                     onChange={useCallback(
-                      (e) => setBrand(e.target.value === "true"),
+                      (e) => setVipExperiencePerk(e.target.value === "true"),
                       []
                     )}
                   >
                     <option value="true">Yes</option>
                     <option value="false">No</option>
-                  </select>
+                  </select> */}
                 </div>
               </Col>
             </Row>
@@ -1174,9 +1241,7 @@ export default function CreateNFT() {
             </div>
             {!digitalProduct && (
               <div className="d-flex align-items-center justify-content-between mt-5 mb-3">
-                <h4 className="fw-bold">
-                  PERKS {`PHYSICAL`}
-                </h4>
+                <h4 className="fw-bold">PERKS {`PHYSICAL`}</h4>
                 <div
                   style={{ height: 1, width: "83%", background: "black" }}
                 ></div>
@@ -1190,7 +1255,7 @@ export default function CreateNFT() {
                       Warranty length
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       className="form-control"
                       id="warrantyLength"
                       name="warrantyLength"
@@ -1260,7 +1325,10 @@ export default function CreateNFT() {
                               type="text"
                               className="form-control"
                               placeholder={item ? item.name : ""}
-                              disabled
+                              onChange={(e) =>
+                                handleChangeOtherFileName(e.target.value, index)
+                              }
+                              disabled={item ? false : true}
                             />
                           </div>
                         </Col>
@@ -1432,9 +1500,13 @@ export default function CreateNFT() {
                         border: "1px solid #0F91D2",
                         color: "#0F91D2",
                       }}
-                      onClick={() =>
-                        setPerkFile((_perkFile) => [..._perkFile, null])
-                      }
+                      onClick={() => {
+                        setPerkFile((_perkFile) => [..._perkFile, null]);
+                        setPerkFileName((_perkFileName) => [
+                          ..._perkFileName,
+                          "",
+                        ]);
+                      }}
                     >
                       ADD MORE
                     </button>
@@ -1536,7 +1608,13 @@ export default function CreateNFT() {
                                 type="text"
                                 className="form-control"
                                 placeholder={item ? item.name : ""}
-                                disabled
+                                onChange={(e) =>
+                                  handleChangeOtherFileName(
+                                    e.target.value,
+                                    index
+                                  )
+                                }
+                                disabled={item ? false : true}
                               />
                             </div>
                           </Col>
@@ -1713,9 +1791,13 @@ export default function CreateNFT() {
                           border: "1px solid #0F91D2",
                           color: "#0F91D2",
                         }}
-                        onClick={() =>
-                          setPerkFile((_perkFile) => [..._perkFile, null])
-                        }
+                        onClick={() => {
+                          setPerkFile((_perkFile) => [..._perkFile, null]);
+                          setPerkFileName((_perkFileName) => [
+                            ..._perkFileName,
+                            "",
+                          ]);
+                        }}
                       >
                         ADD MORE
                       </button>
