@@ -619,7 +619,7 @@ export default function CreateNFT() {
       if (res.status !== 200) {
         toast.current.show({
           severity: "error",
-          summary: "NFT creation failed. Please check the account balance!",
+          summary: "NFT creation failed. Account Balance error Or Hedera chain service Error!",
           detail: `Name: Error`,
           life: 3000,
         });
