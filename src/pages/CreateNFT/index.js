@@ -422,6 +422,14 @@ export default function CreateNFT() {
   // Handles main submit event for when an product is submitted
   const handleSubmit = async (event) => {
     try {
+      if(perkFileName.filter(name=> name === '').length > 0){
+        toast.current.show({
+          severity: "error",
+          summary: "Name of each Image should be defiend!",
+          detail: `Name: Error`,
+          life: 3000,
+        });
+      }
       setIsNFTCreating(true);
       setActiveCustomModal(true);
       setIsNFTCreated(false);
@@ -457,8 +465,9 @@ export default function CreateNFT() {
       let imageUrl = "";
       let _extras = [];
       // create ipfs data and post product at the same time.
+      
       const files = perkFile.map((file, index) => {
-        if (file && perkFileName[index].length > 0) {
+        if (file && perkFileName[index]?.length > 0) {
           console.log(file);
           return new File([file], perkFileName[index], { type: file.type });
         }
