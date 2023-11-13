@@ -395,7 +395,7 @@ export default function ManageNFTs() {
                 <td>{row.redemptionStatus}</td>
 
                 <td className="d-flex justify-content-end">
-                  <Link to={row.redemptionLink ? row.redemptionLink : ""}>
+                  <Link to={row.redemptionLink ? row.redemptionLink : ""} target="_blank">
                     <div
                       className="btn btn-light btn-sm"
                       style={{ border: "0.5px solid gray" }}
