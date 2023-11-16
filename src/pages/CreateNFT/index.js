@@ -429,6 +429,7 @@ export default function CreateNFT() {
           detail: `Name: Error`,
           life: 3000,
         });
+        return;
       }
       setIsNFTCreating(true);
       setActiveCustomModal(true);
