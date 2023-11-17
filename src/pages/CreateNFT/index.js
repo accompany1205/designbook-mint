@@ -177,13 +177,13 @@ export default function CreateNFT() {
 
   const [extras, setExtras] = useState([
     {
-      size: "",
+      size: 0,
       rrp: 0,
       numOfEdition: 0,
       sku: "",
     },
     {
-      size: "",
+      size: 0,
       rrp: 0,
       numOfEdition: 0,
       sku: "",
@@ -1174,7 +1174,7 @@ export default function CreateNFT() {
                       Size* - For unique size, enter 0
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       className="form-control"
                       id={`size${i}`}
                       value={e.size}
